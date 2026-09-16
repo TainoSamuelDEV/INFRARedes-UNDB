@@ -1,0 +1,35 @@
+﻿Grupo;Item;Quantidade;Unidade;Unitario BRL;Subtotal BRL;Natureza O=oferta E=estimativa;Fonte;URL;Consulta
+Rede local;"Switch TP-Link TL-SG2218P; 16 GE PoE+ / 2 SFP / 150 W";1;un;1.799,98;1.799,98;O;P1;https://www.processtec.com.br/produto/switch-16-portas-tp-link-tl-sg2218p-16-portas-gigabit-poe-c-2-portas-sfp;16/09/2026
+Rede local;"AP TP-Link EAP610; dual band Wi-Fi 6 / PoE+";1;un;769,99;769,99;O;P2;https://www.pichau.com.br/access-point-tp-link-omada-mesh-ax1800-wi-fi-6-dual-band-branco-eap610;16/09/2026
+Rede local;"Cabo Furukawa SOHOPLUS Cat 6 U/UTP; caixa 305 m";1;cx;1.459,99;1.459,99;O;P5;https://www.ioncabos.com.br/caixa-de-rede-cat6-furukawa-sohoplus-305-metros;16/09/2026
+Rede local;"Patch panel Furukawa SOHOPLUS 35050402; Cat 6 / 24 portas";1;un;599,00;599,00;O;P6;https://www.mercadolivre.com.br/patch-panel-cat6-t568ab-24p-24-portas-furukawa-soho-plus-35050402/p/MLB27121982;16/09/2026
+Rede local;Keystone Furukawa SOHOPLUS Cat 6;9;un;35,00;315,00;E;ENG;;16/09/2026
+Rede local;"Patch cord Furukawa Cat 6; 9 de 1 m e 9 de 2 m";18;un;35,00;630,00;E;ENG;;16/09/2026
+Rede local;"Rack de parede Intelbras 8 U / 19 pol; profundidade útil >= 450 mm";1;un;650,00;650,00;E;ENG;;16/09/2026
+Rede local;Organizadores 1 U Intelbras + bandeja + PDU compatível;1;kit;260,00;260,00;E;ENG;;16/09/2026
+Rede local;"Caixas/espelhos Tigre, nove pontos; externos vedados";9;un;25,00;225,00;E;ENG;;16/09/2026
+Rede local;Tigre: canaleta compartimentada/dutos de dados e fixação;25;m;25,00;625,00;E;ENG;;16/09/2026
+Rede local;Etiquetas, velcro e consumíveis de terminação;1;kit;100,00;100,00;E;ENG;;16/09/2026
+Rede local;"Nobreak SMS Tech 1200 VA 29304; saída 115 V";1;un;899,99;899,99;O;P7;https://www.kabum.com.br/produto/466280/nobreak-sms-tech-1200va-6-tomadas-entrada-bivolt-e-saida-115v-29304;16/09/2026
+Rede local;Proteções e circuito local: referência Clamper/Tigre;1;kit;500,00;500,00;E;ENG;;16/09/2026
+Terminais;"PC Lenovo ThinkCentre Neo; 16 GB/SSD 512 GB + monitor 22 pol";1;kit;4.000,00;4.000,00;E;ENG;;16/09/2026
+Terminais;"Telefone IP Intelbras TIP 125i; versão com PoE";1;un;319,90;319,90;O;P4;https://www.ibyte.com.br/telefone-fixo-ip-intelbras-tip-125i/p;16/09/2026
+Terminais;"Impressora Brother HL-L2460DW; Ethernet 10/100 e duplex";1;un;1.600,00;1.600,00;E;S11;https://support.brother.com/g/s/id/htmldoc/printer/cv_hll2460dw/use/PDF/PDF.pdf;16/09/2026
+Terminais;"Câmera Intelbras VIP 1230 B G4; 2 MP / PoE / IR";4;un;299,00;1.196,00;O;P3;https://www.magazineluiza.com.br/camera-de-seguranca-intelbras-vip-1230-b-g4-com-resolucao-2mp-branco-preto/p/cge240cg36/cj/cagu/;16/09/2026
+Terminais;"Control iD iDBlock Next com um leitor; pacote a confirmar";1;un;6.490,00;6.490,00;E;P8;https://www.id2control.com.br/;16/09/2026
+Serviços locais;Instalação e identificação dos nove pontos;9;ponto;120,00;1.080,00;E;ENG;;16/09/2026
+Serviços locais;Configuração, testes dos cabos e documentação;1;serv;1.200,00;1.200,00;E;ENG;;16/09/2026
+Serviços locais;Instalação da catraca e adequações pontuais do piso;1;serv;800,00;800,00;E;ENG;;16/09/2026
+Enlace compartilhado;Transceptores TP-Link TL-SM311LS compatíveis em ambas pontas;2;un;200,00;400,00;E;S8;https://www.tp-link.com/br/business-networking/omada-accessory-module-cable/tl-sm311ls/v4/;16/09/2026
+Enlace compartilhado;DIO/caixa óptica Furukawa + pigtails/adaptadores LC;2;kit;300,00;600,00;E;ENG;;16/09/2026
+Enlace compartilhado;Cordão LC-LC duplex OS2 Furukawa;2;un;80,00;160,00;E;ENG;;16/09/2026
+Enlace compartilhado;"Fibra Furukawa OS2 externa dielétrica 6 fibras; cenário 100 m";100;m;6,00;600,00;E;ENG;;16/09/2026
+Enlace compartilhado;"Lançamento em duto existente; cenário 100 m";100;m;8,00;800,00;E;ENG;;16/09/2026
+Enlace compartilhado;Fusões, identificação e teste óptico das duas pontas;1;serv;600,00;600,00;E;ENG;;16/09/2026
+TOTAL LOCAL DIRETO;;;;;25.519,85;;;;
+CONTINGENCIA LOCAL 15%;;;;;3.827,98;;;;
+TOTAL LOCAL;;;;;29.347,83;;;;
+ENLACE COMPARTILHADO DIRETO;;;;;3.160,00;;;;
+CONTINGENCIA ENLACE 15%;;;;;474,00;;;;
+TOTAL ENLACE COMPARTILHADO;;;;;3.634,00;;;;
+TOTAL COMBINADO;;;;;32.981,83;;;;
