@@ -1,0 +1,1583 @@
+"""
+Gerador de Apresentação Executiva em PDF (Estilo Gamma 16:9)
+Projeto de Infraestrutura de Redes - Terminal Portuário do Itaqui
+UNDB - PBL Infraestrutura de Redes 2026.2
+"""
+import os
+import subprocess
+import pypdfium2 as pdfium
+
+HTML_FILE = os.path.abspath("auditoria-tools/apresentacao_gamma_source.html")
+PDF_OUTPUT = os.path.abspath("Projeto-de-Infraestrutura-de-Redes-Apresentacao.pdf")
+
+html_content = """<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Projeto de Infraestrutura de Redes - Terminal Portuário do Itaqui</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: 900pt 507.12pt;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    margin: 0;
+    padding: 0;
+  }
+  .slide {
+    width: 900pt;
+    height: 507.12pt;
+    page-break-after: always;
+    page-break-inside: avoid;
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    padding: 36pt 52pt 32pt 52pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide-cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40pt 60pt;
+  }
+
+  /* Typography */
+  .badge {
+    display: inline-block;
+    align-self: flex-start;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 8.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3pt 8pt;
+    border-radius: 5pt;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 5pt;
+  }
+  .badge-blue {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-color: #bae6fd;
+  }
+  .badge-green {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #bbf7d0;
+  }
+  .badge-purple {
+    background: #f3e8ff;
+    color: #7e22ce;
+    border-color: #e9d5ff;
+  }
+  .badge-amber {
+    background: #fef3c7;
+    color: #b45309;
+    border-color: #fde68a;
+  }
+  
+  .slide-title {
+    font-size: 23pt;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.4px;
+    line-height: 1.15;
+    margin-bottom: 4pt;
+  }
+  .slide-subtitle {
+    font-size: 10pt;
+    color: #475569;
+    line-height: 1.45;
+    margin-bottom: 14pt;
+  }
+
+  /* Grid layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+    flex: 1;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14pt;
+    flex: 1;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12pt;
+    flex: 1;
+  }
+  .grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10pt;
+    flex: 1;
+  }
+
+  /* Cards */
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 9pt;
+    padding: 12pt 15pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-white {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8pt;
+    padding: 10pt 12pt;
+  }
+  .card-header {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6pt;
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+  }
+
+  /* Tables */
+  .table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    text-align: left;
+  }
+  .table-custom th {
+    color: #0f172a;
+    font-weight: 700;
+    padding: 5pt 7pt;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8fafc;
+  }
+  .table-custom td {
+    padding: 5pt 7pt;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+  }
+  .table-custom tr:last-child td {
+    border-bottom: none;
+  }
+  .table-custom .row-bold {
+    font-weight: 700;
+    color: #0f172a;
+    background: #f8fafc;
+  }
+
+  /* Tags & Pills */
+  .pill {
+    display: inline-block;
+    padding: 2pt 5pt;
+    border-radius: 4pt;
+    font-size: 7pt;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pill-blue { background: #e0f2fe; color: #0369a1; }
+  .pill-green { background: #dcfce7; color: #15803d; }
+  .pill-purple { background: #f3e8ff; color: #7e22ce; }
+  .pill-amber { background: #fef3c7; color: #b45309; }
+  .pill-slate { background: #e2e8f0; color: #334155; }
+
+  /* Lists */
+  .spec-list {
+    list-style: none;
+    font-size: 8pt;
+    color: #334155;
+  }
+  .spec-list li {
+    position: relative;
+    padding-left: 11pt;
+    margin-bottom: 4pt;
+    line-height: 1.38;
+  }
+  .spec-list li::before {
+    content: "•";
+    position: absolute;
+    left: 2pt;
+    color: #0284c7;
+    font-weight: bold;
+    font-size: 9.5pt;
+  }
+
+  /* Footer mark */
+  .slide-footer {
+    position: absolute;
+    bottom: 12pt;
+    left: 52pt;
+    right: 52pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7.5pt;
+    color: #94a3b8;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 5pt;
+  }
+  .slide-footer-brand {
+    font-weight: 600;
+    color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==========================================
+     SLIDE 1: CAPA OFICIAL
+     ========================================== -->
+<div class="slide slide-cover">
+  <div style="font-size: 38pt; font-weight: 800; color: #0f172a; letter-spacing: -0.8px; margin-bottom: 8pt;">
+    Projeto de Infraestrutura de Redes
+  </div>
+  <div style="font-size: 26pt; font-weight: 700; color: #0284c7; margin-bottom: 24pt;">
+    Terminal Portuário do Itaqui
+  </div>
+  
+  <div style="font-size: 11pt; font-weight: 600; color: #0f172a; margin-bottom: 4pt;">
+    PBL — Infraestrutura de Redes | UNDB
+  </div>
+  <div style="font-size: 9.5pt; color: #64748b; margin-bottom: 35pt;">
+    São Luís — MA | 2026.2 • Prof. Arlley Costa
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16pt; width: 100%; max-width: 780pt; text-align: left;">
+    <div class="card" style="background: #f1f5f9; border: 1px solid #e2e8f0; padding: 16pt 18pt;">
+      <div style="font-size: 15pt; font-weight: 700; color: #0f172a; margin-bottom: 6pt;">5 Áreas Integradas</div>
+      <div style="font-size: 9pt; color: #475569; line-height: 1.45;">
+        Administrativo, Portaria, Silo de Grãos, Pera Ferroviária e Berço 098 / CCO.
+      </div>
+    </div>
+    
+    <div class="card" style="background: #f1f5f9; border: 1px solid #e2e8f0; padding: 16pt 18pt;">
+      <div style="font-size: 15pt; font-weight: 700; color: #0f172a; margin-bottom: 6pt;">Topologias Completas</div>
+      <div style="font-size: 9pt; color: #475569; line-height: 1.45;">
+        Mapeamento físico e lógico individualizado de cada parte, VLANs e Backbone Óptico.
+      </div>
+    </div>
+
+    <div class="card" style="background: #f1f5f9; border: 1px solid #e2e8f0; padding: 16pt 18pt;">
+      <div style="font-size: 15pt; font-weight: 700; color: #0f172a; margin-bottom: 6pt;">R$ 1.084.840,97</div>
+      <div style="font-size: 9pt; color: #475569; line-height: 1.45;">
+        Orçamento consolidado por ordem de grandeza com reserva técnica de 20%.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">PBL Infraestrutura de Redes • UNDB 4.0</span>
+    <span>Apresentação Executiva do Projeto Final</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 2: VISÃO GERAL DO PROJETO
+     ========================================== -->
+<div class="slide">
+  <div class="badge">VISÃO GERAL</div>
+  <div class="slide-title">Visão Geral do Projeto</div>
+  <div class="slide-subtitle">
+    O Terminal Portuário do Itaqui é um complexo logístico em expansão estratégica em São Luís – MA. O projeto de infraestrutura de redes integra cinco áreas operacionais distintas sob uma arquitetura unificada, com foco em conectividade, segurança, disponibilidade e monitoramento centralizado.
+  </div>
+
+  <div class="grid-5" style="margin-bottom: 14pt;">
+    <div class="card">
+      <div class="card-header" style="font-size: 9.5pt;">Prédio Administrativo</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Hub central de TI com 108 pontos de rede, 3 servidores, 3 switches 48p PoE+ e 4 access points corporativos.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="font-size: 9.5pt;">Portaria TP</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Controle de acesso perimetral com câmeras IP LPR, catraca biométrica, switch 16p PoE+ e AP dedicado.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="font-size: 9.5pt;">Silo de Grãos</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Monitoramento industrial com sensores IoT de gás/temperatura, 5 câmeras antideflagrantes e controlador.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="font-size: 9.5pt;">Pera Ferroviária</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        600 m de via ferroviária com 10 câmeras OCR, 2 balanças dinâmicas de eixos e switches industriais IP67.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="font-size: 9.5pt;">Berço 098 / CCO</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Centro de Controle Operacional com NVR 32ch, telefones IP, switch Core L3 e roteamento de borda.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 10pt 16pt;">
+    <div style="font-size: 8.5pt; font-weight: 700; color: #0f172a; margin-bottom: 2pt;">Infraestrutura-base Unificada:</div>
+    <div style="font-size: 8pt; color: #475569; line-height: 1.45;">
+      Backbone em fibra óptica monomodo OS2 • Switches PoE+ gerenciáveis • Segmentação por VLANs com ACLs • Cabeamento UTP Cat6 100% cobre • Proteção ambiental em gabinetes IP66/IP67 • Nobreaks UPS senoidais em pontos críticos.
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Visão Geral</span>
+    <span>Slide 2</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 3: CONTEXTO DO PROJETO (NOVO)
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-blue">CONTEXTO DO PROJETO</div>
+  <div class="slide-title">Contexto Estratégico, Logístico & Missão Crítica</div>
+  <div class="slide-subtitle">
+    O complexo do Itaqui opera como o principal canal de escoamento de grãos do Arco Norte do Brasil. A infraestrutura de redes atua como a espinha dorsal de sistemas críticos onde indisponibilidades geram severos prejuízos econômicos e operacionais.
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 12pt;">
+    <div class="card">
+      <div class="card-header" style="color: #0369a1;">
+        <span style="font-size: 13pt;">🌊</span> Baía de São Marcos & Calado
+      </div>
+      <ul class="spec-list">
+        <li><strong>Calado Natural de até 23m:</strong> Permite receber gigantes graneleiros das classes <em>Panamax</em> e <em>Capesize</em> sem necessidade de dragagem constante.</li>
+        <li><strong>Variação de Maré de 7 Metros:</strong> Exige precisão contínua na sincronia de carregamento de porões e telemetria ininterrupta do cais.</li>
+        <li><strong>Agressividade Salina:</strong> Maresia extrema e corrosão que demandam passivos de alta blindagem e invólucros herméticos IP66/IP67.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="color: #15803d;">
+        <span style="font-size: 13pt;">🌾</span> Corredor MATOPI & Escoamento
+      </div>
+      <ul class="spec-list">
+        <li><strong>Volume de Grãos:</strong> Mais de 3,7 milhões de toneladas/mês de soja e milho escoados da fronteira agrícola de MA, TO e PI.</li>
+        <li><strong>Integração Multimodal:</strong> Recepção ininterrupta de trens de carga da ferrovia EFC/VLI e carretas bitrem via BR-135.</li>
+        <li><strong>Convergência IT / OT:</strong> Telemetria de silos, balanças dinâmicas e pesagem integradas em tempo real ao ERP SAP/TOTVS.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="color: #b45309;">
+        <span style="font-size: 13pt;">⏱️</span> Prevenção de Demurrage
+      </div>
+      <ul class="spec-list">
+        <li><strong>Custo de Parada de Navio:</strong> Multas marítimas de <em>demurrage</em> entre <strong>US$ 50.000 e US$ 80.000 por dia</strong> por navio parado no berço.</li>
+        <li><strong>Impacto de Falha de Rede:</strong> Uma interrupção nas balanças da Pera ou no OCR da Portaria paralisa toda a malha de embarque.</li>
+        <li><strong>Alta Disponibilidade:</strong> Arquitetura desenhada para índice <strong>99,999% (Five Nines)</strong> sem SPOFs nos links vitais.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 8pt 14pt; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+    <div style="font-size: 8.5pt; color: #1e40af; font-weight: 600;">
+      🎯 Objetivo de Engenharia: Prover infraestrutura de telecomunicações resiliente para operação portuária 24/7/365 com tolerância zero a falhas.
+    </div>
+    <span class="pill pill-blue">OPERAÇÃO CONTÍNUA 24/7</span>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Contexto Estratégico</span>
+    <span>Slide 3</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 4: METODOLOGIA
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 1</div>
+  <div class="slide-title">Metodologia de Engenharia Top-Down</div>
+  <div class="slide-subtitle">
+    A metodologia adotada segue a abordagem Top-Down: as necessidades operacionais de cada área determinam os requisitos técnicos, que por sua vez fundamentam a arquitetura, as topologias e o orçamento — garantindo alinhamento entre demanda real e solução implantada.
+  </div>
+
+  <div class="grid-2">
+    <div style="display: flex; flex-direction: column; gap: 10pt;">
+      <div class="card">
+        <div class="card-header">Ciclo Metodológico Top-Down</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6pt; text-align: center; margin-top: 4pt;">
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt 4pt;">
+            <div style="font-size: 11pt; font-weight: 800; color: #0284c7;">01</div>
+            <div style="font-size: 7.5pt; font-weight: 700; color: #0f172a; margin-top: 2pt;">Levantamento</div>
+            <div style="font-size: 6.5pt; color: #64748b;">Requisitos das Áreas</div>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt 4pt;">
+            <div style="font-size: 11pt; font-weight: 800; color: #0284c7;">02</div>
+            <div style="font-size: 7.5pt; font-weight: 700; color: #0f172a; margin-top: 2pt;">Análise</div>
+            <div style="font-size: 6.5pt; color: #64748b;">Avaliação de Riscos</div>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt 4pt;">
+            <div style="font-size: 11pt; font-weight: 800; color: #0284c7;">03</div>
+            <div style="font-size: 7.5pt; font-weight: 700; color: #0f172a; margin-top: 2pt;">Topologias</div>
+            <div style="font-size: 6.5pt; color: #64748b;">Física & Lógica / VLANs</div>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt 4pt;">
+            <div style="font-size: 11pt; font-weight: 800; color: #0284c7;">04</div>
+            <div style="font-size: 7.5pt; font-weight: 700; color: #0f172a; margin-top: 2pt;">Orçamento</div>
+            <div style="font-size: 6.5pt; color: #64748b;">BOM & Viabilidade</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Princípios da Abordagem</div>
+        <ul class="spec-list">
+          <li><strong>Definição de serviços antes da seleção de ativos:</strong> Especificação de portas e banda a partir dos fluxos de CFTV, automação e telefonia.</li>
+          <li><strong>Segmentação rígida por VLANs:</strong> Proteção dos dispositivos operacionais contra broadcast e ameaças de rede corporativa.</li>
+          <li><strong>Padrão Cat6 UTP 100% Cobre:</strong> Infraestrutura passiva protegida com dutos galvanizados a fogo e armários herméticos.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10pt;">
+      <div class="card" style="background: #f8fafc; border: 1px solid #cbd5e1;">
+        <div class="card-header">
+          <span style="font-size: 13pt;">🔬</span> Validação — Cisco Packet Tracer
+        </div>
+        <div style="font-size: 8pt; color: #334155; line-height: 1.5; margin-bottom: 8pt;">
+          Simulação completa de topologias físicas, endereçamento IP e conectividade inter-VLAN antes da implantação real em campo:
+        </div>
+        <ul class="spec-list">
+          <li>Encapsulamento Trunk 802.1Q e roteamento inter-VLAN com SVIs no Core L3.</li>
+          <li>Distribuição de IPs via DHCP pools segmentados sem risco de colisão.</li>
+          <li>Políticas de filtragem e listas de controle de acesso (ACLs) testadas.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Cobertura das Cinco Áreas</div>
+        <div style="font-size: 8pt; color: #475569; line-height: 1.45;">
+          Cada área foi analisada individualmente quanto a distâncias métricas, agressividade ambiental, cargas elétricas e requisitos de serviço, resultando em projetos setoriais consolidados harmoniosamente na arquitetura geral.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Metodologia</span>
+    <span>Slide 4</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 5: REQUISITOS E RISCOS
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 2</div>
+  <div class="slide-title">Requisitos e Gestão de Riscos Operacionais</div>
+  <div class="slide-subtitle">
+    O ambiente portuário impõe severos desafios físicos, elétricos e químicos. A engenharia do projeto mapeou cada vetor de risco estabelecendo barreiras físicas e lógicas de mitigação.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 8pt;">Requisitos Técnicos Principais</div>
+      
+      <div style="margin-bottom: 9pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Conectividade Centralizada</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">Comunicação ininterrupta entre todos os 5 setores e o CCO via backbone de fibra óptica monomodo subterrâneo.</div>
+      </div>
+
+      <div style="margin-bottom: 9pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Videomonitoramento IP (CFTV)</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">28 câmeras de alta definição com alimentação PoE+ (802.3at) e fluxo contínuo gravado centralmente no NVR do CCO.</div>
+      </div>
+
+      <div style="margin-bottom: 9pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Segmentação de Tráfego</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">Isolamento criptográfico e lógico por VLANs: Dados, Voz, CFTV, Automação/IoT, Controle de Acesso e Gerência.</div>
+      </div>
+
+      <div>
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Disponibilidade e Redundância</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">Nobreaks senoidais em todos os racks remotos e tolerância a falhas no núcleo da rede.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 6pt;">Matriz de Riscos & Mitigações</div>
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>Risco Identificado</th>
+            <th>Impacto</th>
+            <th>Mitigação de Engenharia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Rompimento de Cabos</strong></td>
+            <td>Perda de link</td>
+            <td>Eletrocalhas galvanizadas e tubulações PEAD subterrâneas.</td>
+          </tr>
+          <tr>
+            <td><strong>Interferência EMI</strong></td>
+            <td>Degradação</td>
+            <td>Fibra monomodo OS2 no backbone e Cat6 blindado.</td>
+          </tr>
+          <tr>
+            <td><strong>Falha de Energia</strong></td>
+            <td>Parada total</td>
+            <td>Nobreaks UPS senoidais nos armários de campo e CCO.</td>
+          </tr>
+          <tr>
+            <td><strong>Corrosão / Maresia</strong></td>
+            <td>Oxidação RJ45</td>
+            <td>Armários de aço inox IP66/IP67 e vedação hermética.</td>
+          </tr>
+          <tr>
+            <td><strong>Distâncias Longas (>100m)</strong></td>
+            <td>Atenuação</td>
+            <td>Enlaces em fibra óptica para todas as conexões inter-áreas.</td>
+          </tr>
+          <tr>
+            <td><strong>Acesso Indevido</strong></td>
+            <td>Invasão de rede</td>
+            <td>VLANs estanques, 802.1X e ACLs restritivas no Gateway.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Requisitos e Riscos</span>
+    <span>Slide 5</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 6: ORÇAMENTO POR ORDEM DE GRANDEZA
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 3</div>
+  <div class="slide-title">Orçamento por Ordem de Grandeza</div>
+  <div class="slide-subtitle">
+    Consolidação financeira das cinco áreas com base em pesquisa de mercado de setembro de 2026. Valores representam ordem de grandeza; não incluem infraestrutura civil, servidores finais ou links de operadora pública.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 12pt;">Distribuição Visual dos Investimentos (R$)</div>
+      
+      <!-- Horizontal Bars -->
+      <div style="display: flex; flex-direction: column; gap: 11pt; flex: 1; justify-content: center;">
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
+            <span>Prédio Administrativo</span>
+            <span>R$ 708.624,00 (78,4%)</span>
+          </div>
+          <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
+            <div style="background: #334155; width: 78.4%; height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 6pt; color: #ffffff; font-size: 7.5pt; font-weight: 700;">709k</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
+            <span>Pera Ferroviária</span>
+            <span>R$ 125.144,00 (13,8%)</span>
+          </div>
+          <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
+            <div style="background: #475569; width: 13.8%; height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 4pt; color: #ffffff; font-size: 7.5pt; font-weight: 700;">125k</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
+            <span>Portaria TP</span>
+            <span>R$ 32.981,83 (3,6%)</span>
+          </div>
+          <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
+            <div style="background: #64748b; width: 6.5%; height: 100%;"></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
+            <span>Berço 098 / CCO</span>
+            <span>R$ 18.891,32 (2,1%)</span>
+          </div>
+          <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
+            <div style="background: #64748b; width: 4.5%; height: 100%;"></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
+            <span>Silo de Grãos</span>
+            <span>R$ 18.392,99 (2,0%)</span>
+          </div>
+          <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
+            <div style="background: #64748b; width: 4.4%; height: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10pt;">
+      <div class="card">
+        <div class="card-header" style="margin-bottom: 6pt;">Composição Financeira Detalhada</div>
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Área / Componente</th>
+              <th style="text-align: right;">Valor (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Prédio Administrativo TP</td><td style="text-align: right; font-family: 'JetBrains Mono';">708.624,00</td></tr>
+            <tr><td>Pera Ferroviária</td><td style="text-align: right; font-family: 'JetBrains Mono';">125.144,00</td></tr>
+            <tr><td>Portaria TP</td><td style="text-align: right; font-family: 'JetBrains Mono';">32.981,83</td></tr>
+            <tr><td>Berço 098 / CCO</td><td style="text-align: right; font-family: 'JetBrains Mono';">18.891,32</td></tr>
+            <tr><td>Silo de Grãos</td><td style="text-align: right; font-family: 'JetBrains Mono';">18.392,99</td></tr>
+            <tr class="row-bold"><td>Subtotal Direto</td><td style="text-align: right; font-family: 'JetBrains Mono';">904.034,14</td></tr>
+            <tr><td>Reserva Técnica de Contingência (20%)</td><td style="text-align: right; font-family: 'JetBrains Mono';">180.806,83</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 12pt 16pt;">
+        <div style="font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL CONSOLIDADO ESTIMADO</div>
+        <div style="font-size: 22pt; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono'; margin-top: 2pt;">
+          R$ 1.084.840,97
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Orçamento Geral</span>
+    <span>Slide 6</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 7: AS BUILT / CABEAMENTO ESTRUTURADO
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 4</div>
+  <div class="slide-title">AS BUILT / Cabeamento Estruturado</div>
+  <div class="slide-subtitle">
+    Diretrizes de cabeamento horizontal e vertical em conformidade com as normas ABNT NBR 14565 e ANSI/TIA-568/606. Infraestrutura passiva projetada para imunidade a interferências e resistência à maresia.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">Especificações Técnicas de Cabeamento</div>
+      
+      <div style="margin-bottom: 8pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Cabeamento Horizontal (Cat6 UTP)</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+          Cabo de cobre 100% eletrolítico Cat6 homologado pela Anatel • Máximo de 100 m por lance incluindo patch cords • Suporte nativo a alimentação PoE+ (IEEE 802.3at) • Tomadas RJ45 fêmea com identificação alfa-numérica.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 8pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Cabeamento Backbone (Fibra Óptica OS2)</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+          Fibra monomodo 9/125µm OS2 para ambientes externos com proteção antiroedor e dielétrica • Imunidade completa a ruídos eletromagnéticos gerados por motores e locomotivas.
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Proteção Mecânica e Ambiental</div>
+        <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+          Racks com grau de proteção IP66/IP67 nas áreas externas • Eletrocalhas aramadas perfuradas no Prédio Adm e tubulações de aço galvanizado a fogo nas áreas de cais e ferrovia.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 6pt;">Metragem Estimada por Área</div>
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>Área</th>
+            <th>Especificação</th>
+            <th>Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Prédio Administrativo</strong></td>
+            <td>~3.965 m de Cat6 (13 caixas de 305m)</td>
+            <td>108 pontos</td>
+          </tr>
+          <tr>
+            <td><strong>Portaria TP</strong></td>
+            <td>~85 m de Cat6 com 20% reserva</td>
+            <td>9 pontos</td>
+          </tr>
+          <tr>
+            <td><strong>Silo de Grãos</strong></td>
+            <td>Estrela industrial, raio de 25 m</td>
+            <td>5 câmeras + IoT</td>
+          </tr>
+          <tr>
+            <td><strong>Pera Ferroviária</strong></td>
+            <td>600 m de via + 30 m por ponto</td>
+            <td>10 câmeras + 2 balanças</td>
+          </tr>
+          <tr>
+            <td><strong>Berço 098 / CCO</strong></td>
+            <td>Edifício 32 m × 12 m com corredor central</td>
+            <td>4 câmeras + 5 VoIP</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #f1f5f9; border-radius: 6pt; padding: 6pt 10pt; margin-top: 8pt; font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        🔒 <strong>Identificação e Etiquetagem EIA/TIA-606:</strong> Todos os pontos de telecomunicações, patch panels e blocos ópticos recebem etiquetas autolaminadas com numeração unificada e registro em planta As-Built.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • As-Built & Cabeamento</span>
+    <span>Slide 7</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 8: TOPOLOGIA FÍSICA MACRO DE CAMPUS
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 5</div>
+  <div class="slide-title">Topologia Física Geral de Campus</div>
+  <div class="slide-subtitle">
+    Arquitetura em estrela com Backbone de fibra óptica monomodo OS2 convergindo ao CCO. A topologia física elimina loops físicos, garante redundância nos links principais e suporta distâncias quilométricas com latência desprezível.
+  </div>
+
+  <div class="grid-2">
+    <!-- SVG Vector Topology Refinado -->
+    <div class="card" style="padding: 10pt; background: #ffffff;">
+      <div style="font-size: 8.5pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt; text-align: center;">Diagrama Físico do Backbone Portuário (Estrela)</div>
+      <div style="height: 195pt; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 460 250" style="width: 100%; height: 100%;">
+          <!-- Enlaces de fibra pontilhada azul -->
+          <line x1="230" y1="125" x2="65" y2="45" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
+          <line x1="230" y1="125" x2="395" y2="45" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
+          <line x1="230" y1="125" x2="65" y2="205" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
+          <line x1="230" y1="125" x2="395" y2="205" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
+
+          <!-- Badges de Distâncias dos Enlaces -->
+          <rect x="110" y="65" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="140" y="76" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 450m</text>
+
+          <rect x="290" y="65" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="320" y="76" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 850m</text>
+
+          <rect x="110" y="165" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="140" y="176" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 600m</text>
+
+          <rect x="290" y="165" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="320" y="176" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 320m</text>
+
+          <!-- Core / CCO Central Node -->
+          <rect x="165" y="98" width="130" height="54" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2" />
+          <text x="230" y="121" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">BERÇO 098 / CCO</text>
+          <text x="230" y="136" font-size="7.5" fill="#38bdf8" text-anchor="middle">Core L3 & Borda WAN</text>
+
+          <!-- Node: Portaria -->
+          <rect x="10" y="22" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+          <text x="65" y="42" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PORTARIA TP</text>
+          <text x="65" y="56" font-size="7" fill="#64748b" text-anchor="middle">Switch 16p • LPR / Acesso</text>
+
+          <!-- Node: Silo -->
+          <rect x="340" y="22" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+          <text x="395" y="42" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">SILO DE GRÃOS</text>
+          <text x="395" y="56" font-size="7" fill="#64748b" text-anchor="middle">Switch 24p • Sensores IoT</text>
+
+          <!-- Node: Pera Ferroviaria -->
+          <rect x="10" y="182" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+          <text x="65" y="202" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PERA FERROVIÁRIA</text>
+          <text x="65" y="216" font-size="7" fill="#64748b" text-anchor="middle">2x Switch IP67 • Balanças</text>
+
+          <!-- Node: Prédio Adm -->
+          <rect x="340" y="182" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+          <text x="395" y="202" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PRÉDIO ADMIN.</text>
+          <text x="395" y="216" font-size="7" fill="#64748b" text-anchor="middle">3x Switch 48p • 108 Pontos</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Mídia de Transmissão e Equipamentos -->
+    <div style="display: flex; flex-direction: column; gap: 8pt;">
+      <div class="card" style="padding: 10pt 14pt;">
+        <div class="card-header" style="font-size: 9.5pt;">Mídias de Transmissão por Segmento</div>
+        <div class="grid-2" style="gap: 8pt; margin-top: 4pt;">
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 6pt 8pt;">
+            <div style="font-size: 8pt; font-weight: 700; color: #0284c7;">Fibra Óptica OS2</div>
+            <div style="font-size: 7pt; color: #475569; margin-top: 2pt;">Backbone entre áreas • 10 Gbps pronto • Imunidade EMI total.</div>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 6pt 8pt;">
+            <div style="font-size: 8pt; font-weight: 700; color: #0284c7;">UTP Cat6 100% Cu</div>
+            <div style="font-size: 7pt; color: #475569; margin-top: 2pt;">Distribuição local interna até 100m • Suporta Gigabit e PoE+.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 8pt 12pt; flex: 1;">
+        <div class="card-header" style="font-size: 9.5pt; margin-bottom: 4pt;">Ativos de Rede por Setor</div>
+        <table class="table-custom" style="font-size: 7.5pt;">
+          <thead>
+            <tr><th>Setor</th><th>Switches / Ativos</th><th>Endpoints</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Administrativo</strong></td><td>3× Switch 48p PoE+</td><td>3 Servidores, 4 APs, 108 PCs</td></tr>
+            <tr><td><strong>Portaria TP</strong></td><td>1× Switch 16p PoE+</td><td>4 Câmeras, 1 Catraca, 1 AP</td></tr>
+            <tr><td><strong>Silo de Grãos</strong></td><td>1× Switch 24p PoE+ IP67</td><td>5 Câmeras, Sensores IoT, 1 AP</td></tr>
+            <tr><td><strong>Pera Ferroviária</strong></td><td>2× Switch Industrial IP67</td><td>10 Câmeras OCR, 2 Balanças</td></tr>
+            <tr><td><strong>Berço 098/CCO</strong></td><td>1× Core L3 + Switch 24p</td><td>NVR 32ch, 4 Câmeras, 5 VoIP</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Topologia Física Geral</span>
+    <span>Slide 8</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 9: SETOR 1 - PRÉDIO ADMINISTRATIVO
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-purple">SETOR 1 / ÁREA CORPORATIVA</div>
+  <div class="slide-title">Prédio Administrativo: Topologias Física e Lógica</div>
+  <div class="slide-subtitle">
+    Hub central de telecomunicações corporativas. Concentra o maior volume de pontos de cabeamento Cat6, servidores de produção portuária, armazenamento SAN/NAS e serviços unificados de dados, VoIP e Wi-Fi para 108 estações de trabalho.
+  </div>
+
+  <div class="grid-2">
+    <!-- Topologia Física -->
+    <div class="card">
+      <div class="card-header" style="color: #7e22ce;">
+        <span>🏢</span> Topologia Física (As-Built)
+      </div>
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Rack Principal MDF (Térreo - Sala Climatizada):</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>3× Switches Cisco Catalyst 2960-48P PoE+ (portas Gigabit Uplink).</li>
+          <li>DIO Óptico recebendo par de fibra monomodo OS2 vindo do CCO (320m).</li>
+          <li>Patch Panels Cat6 24p com identificação de portas ANSI/TIA-606.</li>
+          <li>3 Servidores Dell PowerEdge (AD/DNS, ERP Portuário e Backup Local).</li>
+          <li>Storage SAN/NAS dedicado para retenção de relatórios e faturas.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #475569;">
+        <strong>Cabeamento Horizontal:</strong> 108 pontos Cat6 divididos em dois pavimentos (Térreo: Operações e RH / Superior: Diretoria e TI). 4 Access Points Wi-Fi 6 alimentados por PoE+ nas portas 45 a 48 dos switches.
+      </div>
+    </div>
+
+    <!-- Topologia Lógica -->
+    <div class="card">
+      <div class="card-header" style="color: #0369a1;">
+        <span>⚙️</span> Topologia Lógica & Endereçamento IP
+      </div>
+
+      <table class="table-custom" style="font-size: 7.8pt; margin-bottom: 6pt;">
+        <thead>
+          <tr>
+            <th>VLAN</th>
+            <th>Nome</th>
+            <th>Faixa de Rede</th>
+            <th>Gateway</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-blue">VLAN 10</span></td>
+            <td>Dados Corp</td>
+            <td><code>10.100.10.0/24</code></td>
+            <td><code>10.100.10.1</code></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">VLAN 20</span></td>
+            <td>Voz / VoIP</td>
+            <td><code>10.100.20.0/24</code></td>
+            <td><code>10.100.20.1</code></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-purple">VLAN 50</span></td>
+            <td>Wi-Fi Corp</td>
+            <td><code>10.100.50.0/24</code></td>
+            <td><code>10.100.50.1</code></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">VLAN 99</span></td>
+            <td>Gerência TI</td>
+            <td><code>10.100.99.0/24</code></td>
+            <td><code>10.100.99.1</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #334155; margin-bottom: 6pt;">
+        <strong>Políticas Lógicas de Rede:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>VLAN 20 (VoIP) com marcação DSCP EF (Expedited Forwarding) e CoS 5.</li>
+          <li>Servidores alocados em portas estáticas protegidas com isolamento L2.</li>
+          <li>DHCP Snooping e Dynamic ARP Inspection ativados nos 3 switches de acesso.</li>
+        </ul>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6pt; padding: 5pt 8pt; font-size: 7.5pt; color: #475569;">
+        🔒 <strong>ACL de Borda:</strong> Apenas computadores da VLAN 99 (TI) têm permissão para acessar a interface de configuração SSH dos switches e roteadores.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Prédio Administrativo</span>
+    <span>Slide 9</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 10: SETOR 2 - PORTARIA TP
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-blue">SETOR 2 / CONTROLE PERIMETRAL</div>
+  <div class="slide-title">Portaria TP: Topologias Física e Lógica</div>
+  <div class="slide-subtitle">
+    Ponto de estrangulamento operacional e segurança patrimonial. Controla o fluxo rodoviário de entrada de grãos e saída de carretas pesadas, com leitura automática de placas (LPR), pesagem preliminar e triagem biométrica de motoristas.
+  </div>
+
+  <div class="grid-2">
+    <!-- Física -->
+    <div class="card">
+      <div class="card-header" style="color: #0284c7;">
+        <span>🚧</span> Topologia Física (As-Built)
+      </div>
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Rack de Parede Hermético (12U - Guichê Central):</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>1× Switch Cisco Catalyst 2960-16P PoE+ fornecendo dados e energia.</li>
+          <li>Módulo SFP 1000Base-LX com par de fibra OS2 direto ao CCO (450 m).</li>
+          <li>Nobreak UPS 1.5 kVA com proteção de surto DPS para descargas elétricas.</li>
+          <li>Patch Panel Cat6 12p e DIO óptico de parede com conectores LC duplex.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #475569;">
+        <strong>Ativos Conectados:</strong> 4 Câmeras IP LPR Full HD instaladas nas pistas de entrada e saída, 1 Catraca eletrônica biométrica/RFID com controladora IP, 2 Estações de guichê para pesagem e 1 AP externo Wi-Fi para motoristas.
+      </div>
+    </div>
+
+    <!-- Lógica -->
+    <div class="card">
+      <div class="card-header" style="color: #15803d;">
+        <span>🛡️</span> Topologia Lógica & Isolamento
+      </div>
+
+      <table class="table-custom" style="font-size: 7.8pt; margin-bottom: 6pt;">
+        <thead>
+          <tr><th>VLAN</th><th>Aplicação</th><th>Faixa de Rede</th><th>Isolamento</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-amber">VLAN 40</span></td>
+            <td>Controle Acesso</td>
+            <td><code>10.100.40.0/24</code></td>
+            <td>Restrita à TI / Portaria</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-blue">VLAN 30</span></td>
+            <td>CFTV / LPR</td>
+            <td><code>10.100.30.0/24</code></td>
+            <td>Tráfego direto ao NVR</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-purple">VLAN 60</span></td>
+            <td>Wi-Fi Visitantes</td>
+            <td><code>10.100.60.0/24</code></td>
+            <td>Acesso exclusivo Internet</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">VLAN 99</span></td>
+            <td>Gerência Switch</td>
+            <td><code>10.100.99.0/24</code></td>
+            <td>Acesso via SSH v2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #334155; margin-bottom: 6pt;">
+        <strong>Políticas Lógicas de Rede:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>A VLAN 60 de visitantes não possui nenhuma rota interna para as redes corporativas.</li>
+          <li>As imagens das câmeras LPR são transmitidas em fluxo RTSP prioritário.</li>
+          <li>A catraca biométrica comunica-se apenas com a porta TCP 8000 do servidor de acesso.</li>
+        </ul>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6pt; padding: 5pt 8pt; font-size: 7.5pt; color: #475569;">
+        🔒 <strong>Mecanismo de Segurança:</strong> Isolamento de portas no switch impede que um dispositivo na guarita capture pacotes das câmeras de segurança perimetrais.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Portaria TP</span>
+    <span>Slide 10</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 11: SETOR 3 - SILO DE GRÃOS
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-amber">SETOR 3 / ARMAZENAGEM CRÍTICA</div>
+  <div class="slide-title">Silo de Grãos: Topologias Física e Lógica</div>
+  <div class="slide-subtitle">
+    Complexo de armazenamento de grãos com atmosfera potencialmente explosiva decorrente do pó orgânico em suspensão (Zona Ex). Exige equipamentos à prova de explosão, cabeamento blindado e telemetria contínua de temperatura e gases.
+  </div>
+
+  <div class="grid-2">
+    <!-- Física -->
+    <div class="card">
+      <div class="card-header" style="color: #b45309;">
+        <span>🌾</span> Topologia Física (As-Built)
+      </div>
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Armário Industrial NEMA 4X / IP67 (Pressurizado):</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>1× Switch Industrial Ruggedized 24p PoE+ com faixa térmica de -40°C a +75°C.</li>
+          <li>Enlace subterrâneo em duto PEAD blindado com fibra OS2 (850 m até o CCO).</li>
+          <li>UPS industrial senoidal com autonomia estendida para telemetria contínua.</li>
+          <li>Cabos Cat6 STP 100% blindados com conectorização aterrada à malha SPDA.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #475569;">
+        <strong>Sensores e Câmeras:</strong> 5 Câmeras IP antideflagrantes com carcaça de alumínio naval nos silos e moegas, sensores térmicos tipo termopar para massa de grãos, sensores de gás (CO e Fosfina) e 1 AP industrial IP67.
+      </div>
+    </div>
+
+    <!-- Lógica -->
+    <div class="card">
+      <div class="card-header" style="color: #0369a1;">
+        <span>📊</span> Topologia Lógica & Telemetria
+      </div>
+
+      <table class="table-custom" style="font-size: 7.8pt; margin-bottom: 6pt;">
+        <thead>
+          <tr><th>VLAN</th><th>Serviço</th><th>Faixa de Rede</th><th>Prioridade</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-green">VLAN 70</span></td>
+            <td>IoT & Sensores</td>
+            <td><code>10.100.70.0/27</code></td>
+            <td>Alta (Alarme Crítico)</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-blue">VLAN 30</span></td>
+            <td>CFTV Silos</td>
+            <td><code>10.100.30.0/24</code></td>
+            <td>Média (Gravação Contínua)</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-purple">VLAN 50</span></td>
+            <td>Wi-Fi Campo</td>
+            <td><code>10.100.50.0/24</code></td>
+            <td>Média (Tablets Manutenção)</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">VLAN 99</span></td>
+            <td>Gerência Switch</td>
+            <td><code>10.100.99.0/24</code></td>
+            <td>Acesso via SSH v2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #334155; margin-bottom: 6pt;">
+        <strong>Confiabilidade de Telemetria:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>Pacotes Modbus-TCP e MQTT com prioridade estrita nas filas do switch Core.</li>
+          <li>Alarmes de elevação de temperatura disparam interrupção preventiva de esteiras.</li>
+          <li>Sub-rede `/27` aloca 30 endereços úteis, otimizando o domínio de broadcast.</li>
+        </ul>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6pt; padding: 5pt 8pt; font-size: 7.5pt; color: #475569;">
+        🔒 <strong>Segurança Cibernética OT:</strong> Redes de automação totalmente isoladas das estações de trabalho de escritório através de ACLs de camada 3 no CCO.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Silo de Grãos</span>
+    <span>Slide 11</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 12: SETOR 4 - PERA FERROVIÁRIA
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-green">SETOR 4 / OPERAÇÃO FERROVIÁRIA</div>
+  <div class="slide-title">Pera Ferroviária: Topologias Física e Lógica</div>
+  <div class="slide-subtitle">
+    Circuito ferroviário de 600 metros de raio para descarregamento contínuo de vagões sem desacoplamento. Ambiente severo com trepidação contínua, poeira de minério/grão e forte indução eletromagnética de motores de tração.
+  </div>
+
+  <div class="grid-2">
+    <!-- Física -->
+    <div class="card">
+      <div class="card-header" style="color: #15803d;">
+        <span>🚂</span> Topologia Física (As-Built)
+      </div>
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Distribuição ao Longo da Via (600m de Extensão):</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>2× Switches Industriais Ruggedized Cisco IE-3000/4000 PoE+ IP67.</li>
+          <li>Backbone em fibra monomodo OS2 (600m) imune a transientes elétricos.</li>
+          <li>Caixas herméticas em aço inoxidável 316 com coxins antivibração.</li>
+          <li>Nobreaks industriais de campo com baterias de alta temperatura.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #475569;">
+        <strong>Ativos de Campo:</strong> 10 Câmeras IP especiais com obturador rápido (OCR) para leitura de identificação de vagões em movimento, e 2 Balanças dinâmicas de eixos ferroviários (WIM - Weigh In Motion) conectadas via porta Ethernet industrial.
+      </div>
+    </div>
+
+    <!-- Lógica -->
+    <div class="card">
+      <div class="card-header" style="color: #0369a1;">
+        <span>⚖️</span> Topologia Lógica & Pesagem
+      </div>
+
+      <table class="table-custom" style="font-size: 7.8pt; margin-bottom: 6pt;">
+        <thead>
+          <tr><th>VLAN</th><th>Aplicação</th><th>Faixa de Rede</th><th>Protocolo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-blue">VLAN 30</span></td>
+            <td>OCR & CFTV Via</td>
+            <td><code>10.100.30.0/24</code></td>
+            <td>RTSP / Multicast</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">VLAN 70</span></td>
+            <td>Balanças Dinâmicas</td>
+            <td><code>10.100.72.0/27</code></td>
+            <td>TCP/IP Raw / Modbus</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">VLAN 99</span></td>
+            <td>Gerência Switches</td>
+            <td><code>10.100.99.0/24</code></td>
+            <td>SNMPv3 / SSH</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #334155; margin-bottom: 6pt;">
+        <strong>Sincronismo de Pesagem em Movimento:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>Associação instantânea entre a pesagem de cada eixo e a placa do vagão lida pelo OCR.</li>
+          <li>Envio em tempo real para o sistema de controle aduaneiro e balanço de massa.</li>
+          <li>Tolerância de latência inferior a 10 ms para não comprometer a precisão do pesador.</li>
+        </ul>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6pt; padding: 5pt 8pt; font-size: 7.5pt; color: #475569;">
+        🔒 <strong>Integridade dos Dados:</strong> Pacotes de pesagem protegidos por checksum e transmitidos exclusivamente no enlace de fibra óptica dedicado até o CCO.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Pera Ferroviária</span>
+    <span>Slide 12</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 13: SETOR 5 - BERÇO 098 / CCO
+     ========================================== -->
+<div class="slide">
+  <div class="badge">SETOR 5 / NÚCLEO DA REDE</div>
+  <div class="slide-title">Berço 098 / CCO: Topologias Física e Lógica</div>
+  <div class="slide-subtitle">
+    Centro nevrálgico do complexo portuário e área de atracação marítima. Abriga o núcleo inteligente de comutação L3, terminação de todos os cabos de fibra óptica de campus, gateway de todas as VLANs e o comando operacional de manobras de navios.
+  </div>
+
+  <div class="grid-2">
+    <!-- Física -->
+    <div class="card">
+      <div class="card-header" style="color: #0f172a;">
+        <span>⚓</span> Topologia Física (As-Built)
+      </div>
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Datacenter Principal do CCO (MDF Central):</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>1× Switch Core L3 Cisco Catalyst 3650 (comutação inter-VLAN a wirespeed).</li>
+          <li>1× Roteador de Borda Cisco ISR 4331 com redundância WAN e Firewall perimetral.</li>
+          <li>1× Switch Catalyst 24p PoE+ para os computadores e telefones da mesa de comando.</li>
+          <li>NVR Centralizado 32 canais com 64 TB em RAID 5 para gravação contínua.</li>
+          <li>Nobreak online senoidal 5 kVA com gerador a diesel para autonomia irrestrita.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #475569;">
+        <strong>Cais de Atracação (Berço 098):</strong> 4 Câmeras PTZ industriais com zoom óptico de 40x instaladas em torres no cais para monitorar cabos de amarração e maré, e 5 Telefones IP para contato rádio/praticagem.
+      </div>
+    </div>
+
+    <!-- Lógica -->
+    <div class="card">
+      <div class="card-header" style="color: #0284c7;">
+        <span>🧠</span> Topologia Lógica Central
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 8pt; margin-bottom: 6pt; font-size: 8pt;">
+        <strong>Serviços Centrais Concentrados no Core L3 & Borda:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>Terminação de todas as SVIs (Gateways) das VLANs 10, 20, 30, 40, 50, 60, 70 e 99.</li>
+          <li>Servidor DHCP corporativo com pools segmentados para cada área.</li>
+          <li>Trunks 802.1Q ativos em todas as portas de fibra conectadas aos setores.</li>
+          <li>ACLs de camada 3 controlando de forma rígida a comunicação inter-setores.</li>
+        </ul>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6pt; padding: 7pt; font-size: 7.5pt; color: #334155; margin-bottom: 6pt;">
+        <strong>Integração de Sistemas Operacionais:</strong>
+        <ul class="spec-list" style="margin-top: 3pt;">
+          <li>Console de monitoramento unificado exibindo telemetria e imagens no telão.</li>
+          <li>QoS estrito garantindo zero perda de pacotes na comunicação de rádio e voz.</li>
+        </ul>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6pt; padding: 5pt 8pt; font-size: 7.5pt; color: #475569;">
+        🔒 <strong>Borda de Rede Protegida:</strong> Links de internet redundantemente balanceados via BGP com túneis VPN IPsec criptografados para a sede corporativa.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Berço 098 / CCO</span>
+    <span>Slide 13</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 14: TOPOLOGIA LÓGICA CONSOLIDADA & VLANS
+     ========================================== -->
+<div class="slide">
+  <div class="badge">TÓPICO 6</div>
+  <div class="slide-title">Topologia Lógica — Segmentação por VLANs</div>
+  <div class="slide-subtitle">
+    Isolamento lógico de tráfego com políticas de roteamento restritivas entre VLANs. O gateway central no CCO controla todo o tráfego inter-VLAN com ACLs de camada 3 e marcação rigorosa de QoS para voz e telemetria crítica.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 6pt;">Tabela de VLANs — Visão Consolidada</div>
+      <table class="table-custom" style="font-size: 7.8pt;">
+        <thead>
+          <tr>
+            <th>VLAN</th>
+            <th>Nome</th>
+            <th>Endereçamento</th>
+            <th>Dispositivos Atendidos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-blue">10</span></td>
+            <td>Dados Corp</td>
+            <td><code>10.100.10.0/24</code></td>
+            <td>PCs, impressoras, estações de trabalho</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">20</span></td>
+            <td>Voz / Telefonia</td>
+            <td><code>10.100.20.0/24</code></td>
+            <td>Telefones IP (QoS de alta prioridade)</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-amber">30</span></td>
+            <td>CFTV IP</td>
+            <td><code>10.100.30.0/24</code></td>
+            <td>28 Câmeras IP, Servidores NVR</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-purple">40</span></td>
+            <td>Controle Acesso</td>
+            <td><code>10.100.40.0/24</code></td>
+            <td>Catracas eletrônicas, controladoras</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-blue">50</span></td>
+            <td>Wi-Fi Corp</td>
+            <td><code>10.100.50.0/24</code></td>
+            <td>Dispositivos móveis corporativos</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">60</span></td>
+            <td>Wi-Fi Visitantes</td>
+            <td><code>10.100.60.0/24</code></td>
+            <td>Rede isolada sem acesso interno</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">70</span></td>
+            <td>IoT / Automação</td>
+            <td><code>10.100.70.0/24</code></td>
+            <td>Sensores de silos, balanças ferroviárias</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-slate">99</span></td>
+            <td>Gerência TI</td>
+            <td><code>10.100.99.0/24</code></td>
+            <td>Switches, roteadores, nobreaks (SSH)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8pt;">
+      <div class="card" style="padding: 10pt 14pt;">
+        <div class="card-header" style="font-size: 9.5pt;">Roteamento & Integração 802.1Q</div>
+        <ul class="spec-list" style="margin-top: 4pt; font-size: 8pt;">
+          <li><strong>Trunks 802.1Q Nativos:</strong> Encapsulamento de múltiplos segmentos lógicos nos enlaces de fibra entre os switches de campo e o CCO.</li>
+          <li><strong>Gateway Centralizado no CCO:</strong> O switch Core L3 processa os roteamentos autorizados e descarta pacotes entre VLANs não autorizadas.</li>
+          <li><strong>QoS & Priorização de Filas:</strong> Voz (VLAN 20) e Automação (VLAN 70) possuem banda garantida; tráfego best-effort para dados comuns e visitantes.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 10pt 14pt; flex: 1;">
+        <div class="card-header" style="font-size: 9.5pt; color: #0284c7;">Segurança e Arquitetura Zero Trust</div>
+        <div style="font-size: 8pt; color: #475569; line-height: 1.45;">
+          A arquitetura implementa o conceito de menor privilégio: câmeras de segurança não têm rota para a internet; balanças e sensores industriais comunicam-se estritamente com os servidores de pesagem; a rede de visitantes possui bloqueio perimetral de acesso à rede portuária interna.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Topologia Lógica & VLANs</span>
+    <span>Slide 14</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 15: JUSTIFICATIVAS TÉCNICAS
+     ========================================== -->
+<div class="slide">
+  <div class="badge">ANÁLISE TÉCNICA</div>
+  <div class="slide-title">Justificativas Técnicas de Engenharia</div>
+  <div class="slide-subtitle">
+    Cada decisão de projeto foi fundamentada em requisitos operacionais específicos do ambiente portuário-industrial, garantindo robustez mecânica, segurança cibernética e eficiência de investimento.
+  </div>
+
+  <div class="grid-4" style="margin-bottom: 8pt;">
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Fibra no Backbone</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Imunidade total a interferências EMI de locomotivas e esteiras; suporta distâncias superiores a 1 km sem necessidade de repetidores ativos.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Switches PoE+</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Alimentação elétrica integrada (IEEE 802.3at) reduz infraestrutura de tomadas e pontos de falha para câmeras, APs e telefonia IP.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Proteção IP66/IP67</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Armários de aço inoxidável herméticos protegem equipamentos contra maresia corrosiva, umidade, chuva torrencial e particulados de grãos.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Segmentação VLANs</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Isolamento lógico estanca domínios de broadcast, previne tempestades de rede, restringe acessos e protege o tráfego industrial de telemetria.
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Redundância & UPS</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Nobreaks senoidais em todos os racks remotos garantem operação ininterrupta durante oscilações da rede elétrica da concessionária.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Simulação Packet Tracer</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Validação prévia de endereçamento IP, comutação L2/L3 e conectividade entre todas as áreas antes da aquisição e instalação em campo.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Por que Cat6 e não 5e?</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Cat6 suporta 10 Gbps em distâncias curtas, oferece maior largura de banda (250 MHz), menor diafonia (crosstalk) e melhor dissipação para PoE+.
+      </div>
+    </div>
+
+    <div class="card" style="padding: 10pt 12pt;">
+      <div style="font-size: 9pt; font-weight: 700; color: #0f172a; margin-bottom: 4pt;">Escalabilidade Futura</div>
+      <div style="font-size: 7.5pt; color: #475569; line-height: 1.4;">
+        Topologia estrela modular com portas livres nos switches permite adicionar novos silos, berços ou balanças sem alterar o núcleo da rede.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">Terminal Portuário do Itaqui • Justificativas Técnicas</span>
+    <span>Slide 15</span>
+  </div>
+</div>
+
+<!-- ==========================================
+     SLIDE 16: CONCLUSÃO & SÍNTESE
+     ========================================== -->
+<div class="slide">
+  <div class="badge badge-green">CONCLUSÃO</div>
+  <div class="slide-title">Conclusão & Homologação do Projeto</div>
+  <div class="slide-subtitle">
+    O projeto de infraestrutura de redes do Terminal Portuário do Itaqui consolida uma solução técnica coerente e integrada para cinco áreas operacionais distintas, atendendo a requisitos de conectividade, segurança, disponibilidade e escalabilidade com viabilidade financeira comprovada.
+  </div>
+
+  <div class="grid-2">
+    <div style="display: flex; flex-direction: column; gap: 8pt;">
+      <div class="grid-2" style="gap: 8pt;">
+        <div class="card" style="padding: 10pt 12pt;">
+          <div style="font-size: 9pt; font-weight: 700; color: #0284c7;">Conectividade</div>
+          <div style="font-size: 7.5pt; color: #475569; margin-top: 2pt;">Backbone em fibra óptica OS2 interligando todas as áreas ao CCO com alta velocidade.</div>
+        </div>
+        <div class="card" style="padding: 10pt 12pt;">
+          <div style="font-size: 9pt; font-weight: 700; color: #15803d;">Segurança</div>
+          <div style="font-size: 7.5pt; color: #475569; margin-top: 2pt;">8 VLANs com ACLs restritivas, isolamento de CFTV e controle de acesso estrito.</div>
+        </div>
+        <div class="card" style="padding: 10pt 12pt;">
+          <div style="font-size: 9pt; font-weight: 700; color: #b45309;">Disponibilidade</div>
+          <div style="font-size: 7.5pt; color: #475569; margin-top: 2pt;">Nobreaks UPS em pontos críticos, switches industriais e redundância de rotas.</div>
+        </div>
+        <div class="card" style="padding: 10pt 12pt;">
+          <div style="font-size: 9pt; font-weight: 700; color: #7e22ce;">Escalabilidade</div>
+          <div style="font-size: 7.5pt; color: #475569; margin-top: 2pt;">Arquitetura em estrela expansível sem reestruturação da infraestrutura existente.</div>
+        </div>
+      </div>
+
+      <div class="card" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 10pt 14pt;">
+        <div style="font-size: 8.5pt; font-weight: 700; color: #0f172a; margin-bottom: 2pt;">Resultado Esperado:</div>
+        <div style="font-size: 8pt; color: #334155; line-height: 1.45;">
+          A infraestrutura proposta assegura operação contínua 24/7/365, prevenção de paradas operacionais e multas marítimas de demurrage, monitoramento unificado e conformidade plena com o edital do projeto PBL da UNDB.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 6pt;">Síntese Geral dos Indicadores do Projeto</div>
+      <table class="table-custom" style="font-size: 8pt;">
+        <thead>
+          <tr><th>Indicador</th><th style="text-align: right;">Valor Consolidado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Áreas Operacionais Integradas</td><td style="text-align: right; font-weight: 700;">5 Áreas</td></tr>
+          <tr><td>Total de Segmentos de VLAN</td><td style="text-align: right; font-weight: 700;">8 VLANs Lógicas</td></tr>
+          <tr><td>Câmeras IP de Alta Resolução</td><td style="text-align: right; font-weight: 700;">28 Câmeras</td></tr>
+          <tr><td>Pontos de Rede Cat6 Homologados</td><td style="text-align: right; font-weight: 700;">120+ Pontos</td></tr>
+          <tr><td>Extensão do Backbone Óptico OS2</td><td style="text-align: right; font-weight: 700;">~2.220 Metros</td></tr>
+          <tr><td>Subtotal de Investimento em Ativos</td><td style="text-align: right; font-family: 'JetBrains Mono';">R$ 904.034,14</td></tr>
+          <tr><td>Reserva Técnica de Contingência (20%)</td><td style="text-align: right; font-family: 'JetBrains Mono';">R$ 180.806,83</td></tr>
+          <tr class="row-bold" style="background: #f1f5f9; font-size: 9pt;">
+            <td>Orçamento Total Consolidado</td>
+            <td style="text-align: right; font-family: 'JetBrains Mono'; color: #0284c7;">R$ 1.084.840,97</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="slide-footer-brand">PBL Infraestrutura de Redes • UNDB São Luís - MA</span>
+    <span>Aprovado para Defesa do Projeto • 2026.2</span>
+  </div>
+</div>
+
+</body>
+</html>
+"""
+
+with open(HTML_FILE, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print(f"HTML gerado em: {HTML_FILE}")
+
+EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+if not os.path.exists(EDGE_PATH):
+    EDGE_PATH = r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+
+file_url = f"file:///{HTML_FILE.replace(os.sep, '/')}"
+
+cmd = [
+    EDGE_PATH,
+    "--headless",
+    "--disable-gpu",
+    "--no-pdf-header-footer",
+    f"--print-to-pdf={PDF_OUTPUT}",
+    file_url
+]
+
+print("Executando renderizacao do PDF via Microsoft Edge...")
+res = subprocess.run(cmd, capture_output=True, text=True)
+
+if os.path.exists(PDF_OUTPUT):
+    doc = pdfium.PdfDocument(PDF_OUTPUT)
+    print(f"\nPDF GERADO COM SUCESSO!")
+    print(f"  Arquivo: {os.path.basename(PDF_OUTPUT)}")
+    print(f"  Tamanho: {os.path.getsize(PDF_OUTPUT)} bytes")
+    print(f"  Total de Paginas: {len(doc)}")
+else:
+    print("ERRO ao gerar PDF!")
+    print(res.stderr)
