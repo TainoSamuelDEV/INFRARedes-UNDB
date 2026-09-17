@@ -1,6 +1,6 @@
 import os
 
-def generate_presentation():
+def generate_business_presentation():
     html_content = """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,33 +8,35 @@ def generate_presentation():
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Defesa de Projeto: Infraestrutura de Redes do Complexo Portuário | UNDB 4.0</title>
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-base: #060913;
-      --bg-surface: rgba(15, 23, 42, 0.75);
-      --bg-surface-elevated: rgba(30, 41, 59, 0.7);
-      --bg-card: rgba(15, 23, 42, 0.65);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(6, 182, 212, 0.5);
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
+      --bg-page: #f1f5f9;
+      --bg-slide: #ffffff;
+      --bg-card: #f8fafc;
+      --bg-card-hover: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-dark: #cbd5e1;
+      
+      --text-main: #0f172a;
+      --text-sub: #334155;
       --text-muted: #64748b;
       
-      --cyan: #06b6d4;
-      --cyan-glow: rgba(6, 182, 212, 0.25);
-      --emerald: #10b981;
-      --emerald-glow: rgba(16, 185, 129, 0.25);
-      --violet: #8b5cf6;
-      --amber: #f59e0b;
-      --rose: #f43f5e;
-      --blue: #3b82f6;
-
-      --font-display: 'Outfit', sans-serif;
+      --navy: #1e3a8a;
+      --blue: #2563eb;
+      --blue-subtle: #eff6ff;
+      --emerald: #15803d;
+      --emerald-subtle: #f0fdf4;
+      --amber: #b45309;
+      --amber-subtle: #fffbeb;
+      --red: #b91c1c;
+      --red-subtle: #fef2f2;
+      
+      --font-title: 'Outfit', sans-serif;
       --font-body: 'Inter', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -46,696 +48,668 @@ def generate_presentation():
     }
 
     body {
-      background-color: var(--bg-base);
-      color: var(--text-primary);
+      background-color: var(--bg-page);
+      color: var(--text-main);
       font-family: var(--font-body);
-      overflow: hidden;
       height: 100vh;
       width: 100vw;
+      overflow: hidden;
       user-select: none;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Background dynamic decorative mesh */
-    .ambient-glow {
-      position: fixed;
-      width: 650px;
-      height: 650px;
-      border-radius: 50%;
-      filter: blur(140px);
-      opacity: 0.18;
-      pointer-events: none;
-      z-index: 0;
-      transition: all 1.2s ease;
-    }
-    .glow-1 { top: -150px; left: -150px; background: radial-gradient(circle, var(--cyan), transparent 70%); }
-    .glow-2 { bottom: -150px; right: -150px; background: radial-gradient(circle, var(--violet), transparent 70%); }
-    .glow-3 { top: 40%; left: 45%; background: radial-gradient(circle, var(--emerald), transparent 70%); opacity: 0.08; }
-
     /* Top Progress Bar */
-    .progress-track {
+    .progress-bar-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 4px;
-      background: rgba(255, 255, 255, 0.05);
+      background: #e2e8f0;
       z-index: 100;
     }
-    .progress-fill {
+    .progress-bar-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--cyan), var(--emerald));
-      box-shadow: 0 0 12px var(--cyan);
-      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--navy);
+      transition: width 0.3s ease;
     }
 
-    /* Top Brand Bar */
-    .top-bar {
+    /* Top Corporate Navigation Header */
+    .top-nav {
       position: fixed;
-      top: 12px;
-      left: 24px;
-      right: 24px;
+      top: 10px;
+      left: 32px;
+      right: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 90;
       pointer-events: none;
     }
-    .top-badge {
+    .brand-box {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 0.78rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
+      color: var(--text-sub);
       pointer-events: auto;
     }
-    .top-badge .dot {
+    .brand-box .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--emerald);
-      box-shadow: 0 0 8px var(--emerald);
     }
-    .top-right {
+    .top-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       pointer-events: auto;
     }
 
-    /* Slide Deck Viewport */
-    .deck-container {
+    /* Viewport Slide Sheet Container (Business 16:9 Paper Style) */
+    .viewport {
       position: relative;
       width: 100vw;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 55px 32px 65px;
       z-index: 10;
-      padding: 60px 40px 70px;
     }
 
     .slide {
       position: absolute;
-      width: 90%;
-      max-width: 1380px;
-      height: 82vh;
-      max-height: 860px;
-      background: var(--bg-surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 40px 50px;
+      width: 92%;
+      max-width: 1360px;
+      height: 84vh;
+      max-height: 820px;
+      background: var(--bg-slide);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      padding: 36px 44px;
       display: flex;
       flex-direction: column;
       opacity: 0;
       visibility: hidden;
-      transform: scale(0.96) translateY(20px);
-      transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                  transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                  visibility 0.4s;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
       overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
-      transform: scale(1) translateY(0);
+      transform: translateY(0);
       z-index: 20;
     }
 
     /* Slide Header */
     .slide-header {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
       flex-shrink: 0;
     }
-    .slide-category {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--cyan);
-      font-size: 0.82rem;
+    .slide-tag {
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      color: var(--navy);
+      display: inline-block;
+      margin-bottom: 4px;
     }
     .slide-title {
-      font-family: var(--font-display);
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
+      font-family: var(--font-title);
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
     }
     .slide-subtitle {
-      color: var(--text-secondary);
-      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-size: 1rem;
       margin-top: 4px;
       font-weight: 400;
     }
 
-    /* Slide Body (Grid / Flex content) */
+    /* Slide Body */
     .slide-body {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
       overflow-y: auto;
-      padding-right: 6px;
+      padding-right: 4px;
     }
     .slide-body::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
     }
     .slide-body::-webkit-scrollbar-thumb {
-      background: var(--border-subtle);
+      background: var(--border-dark);
       border-radius: 4px;
     }
 
-    /* Generic Grid layouts */
+    /* Layout Grids */
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 20px;
       height: 100%;
     }
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 16px;
     }
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-    .grid-5 {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
       gap: 14px;
     }
 
-    /* Cards & Glass Containers */
-    .card {
+    /* Corporate Cards */
+    .box {
       background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
-      transition: border-color 0.2s, transform 0.2s;
     }
-    .card:hover {
-      border-color: rgba(255, 255, 255, 0.18);
-      transform: translateY(-2px);
-    }
-    .card.highlight-cyan {
-      border-left: 4px solid var(--cyan);
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, var(--bg-card) 60%);
-    }
-    .card.highlight-emerald {
-      border-left: 4px solid var(--emerald);
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-card) 60%);
-    }
-    .card.highlight-violet {
-      border-left: 4px solid var(--violet);
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, var(--bg-card) 60%);
-    }
-    .card.highlight-amber {
-      border-left: 4px solid var(--amber);
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 60%);
-    }
-    .card.highlight-rose {
-      border-left: 4px solid var(--rose);
-      background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, var(--bg-card) 60%);
-    }
-
-    .card-title {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
+    .box-title {
+      font-family: var(--font-title);
+      font-size: 1.05rem;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text-main);
       margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .card-desc {
-      font-size: 0.92rem;
+    .box-desc {
+      font-size: 0.9rem;
       line-height: 1.5;
-      color: var(--text-secondary);
+      color: var(--text-sub);
       flex: 1;
     }
 
-    /* Badges & Pills */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 10px;
-      border-radius: 9999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .pill-cyan { background: rgba(6, 182, 212, 0.15); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3); }
-    .pill-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .pill-violet { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
-    .pill-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .pill-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .border-blue { border-left: 4px solid var(--blue); }
+    .border-navy { border-left: 4px solid var(--navy); }
+    .border-emerald { border-left: 4px solid var(--emerald); }
+    .border-amber { border-left: 4px solid var(--amber); }
+    .border-red { border-left: 4px solid var(--red); }
 
-    /* Stat Numbers */
-    .stat-box {
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 12px;
+    /* Key Numbers / Stat Cards */
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       padding: 16px;
-      border: 1px solid var(--border-subtle);
       text-align: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: 2.2rem;
-      font-weight: 800;
-      line-height: 1;
+    .stat-val {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.1;
       margin-bottom: 4px;
     }
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
+    .stat-title {
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       font-weight: 600;
+      color: var(--text-muted);
     }
 
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-navy { background: #e0e7ff; color: #1e3a8a; }
+    .badge-green { background: var(--emerald-subtle); color: var(--emerald); }
+    .badge-amber { background: var(--amber-subtle); color: var(--amber); }
+    .badge-red { background: var(--red-subtle); color: var(--red); }
+    .badge-blue { background: var(--blue-subtle); color: var(--blue); }
+
     /* Tables */
-    .slide-table {
+    .table-clean {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.88rem;
-      margin-top: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 6px;
     }
-    .slide-table th {
-      background: rgba(15, 23, 42, 0.8);
-      color: var(--text-muted);
+    .table-clean th {
+      background: #f8fafc;
+      color: var(--text-main);
       font-weight: 600;
       text-align: left;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      font-size: 0.76rem;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
-    .slide-table td {
-      padding: 10px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: var(--text-secondary);
-      font-family: var(--font-body);
+    .table-clean td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-sub);
     }
-    .slide-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text-primary);
+    .table-clean tr:last-child td {
+      border-bottom: none;
     }
-    .code-mono {
+    .table-clean tr:hover td {
+      background: #f8fafc;
+    }
+    .code {
       font-family: var(--font-mono);
-      font-size: 0.82rem;
-      background: rgba(0, 0, 0, 0.35);
+      font-size: 0.8rem;
+      background: #f1f5f9;
+      color: #0f172a;
       padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--cyan);
+      border-radius: 3px;
+      border: 1px solid var(--border-color);
     }
 
     /* Lists */
-    .feature-list {
+    .checklist {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
-    .feature-list li {
+    .checklist li {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
-      font-size: 0.93rem;
-      color: var(--text-secondary);
+      gap: 9px;
+      font-size: 0.9rem;
+      color: var(--text-sub);
       line-height: 1.45;
     }
-    .feature-list li strong {
-      color: var(--text-primary);
+    .checklist li strong {
+      color: var(--text-main);
     }
-    .feature-list .icon {
+    .check-icon {
       flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
-      margin-top: 1px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      background: #e2e8f0;
+      color: var(--text-main);
+      margin-top: 2px;
     }
-    .icon-cyan { background: rgba(6, 182, 212, 0.2); color: var(--cyan); }
-    .icon-emerald { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
-    .icon-amber { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
-    .icon-rose { background: rgba(244, 63, 94, 0.2); color: var(--rose); }
+    .check-icon.green { background: var(--emerald-subtle); color: var(--emerald); }
+    .check-icon.blue { background: var(--blue-subtle); color: var(--blue); }
+    .check-icon.amber { background: var(--amber-subtle); color: var(--amber); }
 
     /* Bottom Control Bar */
-    .bottom-bar {
+    .bottom-nav {
       position: fixed;
-      bottom: 12px;
-      left: 24px;
-      right: 24px;
+      bottom: 10px;
+      left: 32px;
+      right: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 90;
       pointer-events: none;
     }
-    .controls-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
-      padding: 6px 10px;
-      border-radius: 9999px;
-      pointer-events: auto;
-    }
-    .ctrl-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      padding: 6px 12px;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+    .nav-btn-group {
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 4px 8px;
+      border-radius: 6px;
+      pointer-events: auto;
     }
-    .ctrl-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
+    .btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-sub);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .ctrl-btn.active-btn {
-      background: var(--cyan);
-      color: #041019;
-      font-weight: 700;
+    .btn:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border-color: var(--border-color);
     }
-    .slide-counter {
+    .btn.active {
+      background: var(--navy);
+      color: #ffffff;
+    }
+    .btn-primary {
+      background: var(--navy);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #172554;
+      color: #ffffff;
+    }
+    .counter {
       font-family: var(--font-mono);
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--text-main);
       padding: 0 8px;
     }
+    .kbd {
+      background: #f1f5f9;
+      border: 1px solid var(--border-dark);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-main);
+    }
 
-    /* Modal: Slide Overview Grid */
-    .overview-modal {
+    /* Modal: Overview Grid */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(6, 9, 19, 0.92);
-      backdrop-filter: blur(20px);
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
       z-index: 200;
       display: flex;
       flex-direction: column;
-      padding: 50px 60px;
+      padding: 40px 60px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
-    .overview-modal.show {
+    .modal-backdrop.open {
       opacity: 1;
       pointer-events: auto;
     }
-    .overview-header {
+    .modal-window {
+      background: #ffffff;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 24px 28px;
+      overflow: hidden;
+    }
+    .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
     }
-    .overview-title {
-      font-family: var(--font-display);
-      font-size: 1.75rem;
-      font-weight: 800;
+    .modal-title {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
     }
     .overview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
       overflow-y: auto;
       flex: 1;
-      padding-right: 8px;
+      padding-right: 6px;
     }
-    .thumb-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 16px;
+    .thumb {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 14px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 130px;
-      transition: all 0.2s;
+      min-height: 110px;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .thumb-card:hover {
-      border-color: var(--cyan);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+    .thumb:hover {
+      border-color: var(--navy);
+      background: #ffffff;
     }
-    .thumb-card.active-thumb {
-      border-color: var(--emerald);
-      background: rgba(16, 185, 129, 0.08);
+    .thumb.current {
+      border-color: var(--navy);
+      background: #eff6ff;
+      box-shadow: 0 0 0 1px var(--navy);
     }
-    .thumb-index {
+    .thumb-num {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
+      font-weight: 600;
     }
-    .thumb-title {
-      font-family: var(--font-display);
-      font-size: 0.98rem;
+    .thumb-head {
+      font-family: var(--font-title);
+      font-size: 0.92rem;
       font-weight: 700;
-      color: var(--text-primary);
-      margin-top: 6px;
+      color: var(--text-main);
+      margin-top: 4px;
     }
 
-    /* Modal: Presenter Notes Drawer */
-    .notes-drawer {
+    /* Modal: Notes Drawer */
+    .notes-box {
       position: fixed;
       bottom: 60px;
-      right: 24px;
+      right: 32px;
       width: 440px;
       max-height: 380px;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-focus);
-      border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      padding: 20px 24px;
+      background: #ffffff;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      padding: 18px 20px;
       z-index: 95;
       display: flex;
       flex-direction: column;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
       pointer-events: none;
-      transition: all 0.25s ease;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
-    .notes-drawer.show {
+    .notes-box.open {
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
     }
-    .notes-header {
+    .notes-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-color);
     }
-    .notes-title {
-      font-size: 0.85rem;
+    .notes-tag {
+      font-size: 0.78rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--cyan);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      letter-spacing: 0.05em;
+      color: var(--navy);
     }
-    .notes-content {
+    .notes-body {
       font-size: 0.88rem;
       line-height: 1.6;
-      color: #cbd5e1;
+      color: var(--text-sub);
       overflow-y: auto;
       flex: 1;
     }
-    .notes-content ul {
-      margin-left: 18px;
-      margin-top: 6px;
-    }
 
-    /* SVG Topology Visualizer in Slide */
-    .svg-container {
+    /* SVG Business Container */
+    .svg-wrapper {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 12px;
-      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
       overflow: hidden;
+      padding: 8px;
     }
-    .svg-container svg {
+    .svg-wrapper svg {
       width: 100%;
       height: 100%;
       max-height: 480px;
-    }
-
-    /* Keyboard Help Tooltip */
-    .kbd-tag {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-      padding: 2px 6px;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--text-primary);
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Ambient Glows -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-  <div class="ambient-glow glow-3"></div>
-
   <!-- Top Progress Bar -->
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill"></div>
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progressFill"></div>
   </div>
 
-  <!-- Top Brand Navigation Header -->
-  <header class="top-bar">
-    <div class="top-badge">
+  <!-- Top Corporate Header -->
+  <header class="top-nav">
+    <div class="brand-box">
       <span class="dot"></span>
-      <span>UNDB 4.0 Infraestrutura de Redes &bull; Prof. Arlley Costa &bull; 2026.2</span>
+      <span>UNDB &bull; Escola de Tecnologia &bull; Prof. Arlley Costa &bull; 2026.2</span>
     </div>
-    <div class="top-right">
-      <span class="top-badge" style="border-color: rgba(16, 185, 129, 0.4);">
-        <span style="color: var(--emerald); font-weight: 700;">Score 98/100</span> &bull; Homologado
-      </span>
-      <button class="ctrl-btn" id="btnNotesToggle" title="Alternar Notas do Apresentador (N)">
-        🎙️ <span class="kbd-tag">N</span> Notas
-      </button>
-      <button class="ctrl-btn" id="btnOverviewToggle" title="Visão Geral dos Slides (O)">
-        🗂️ <span class="kbd-tag">O</span> Grid
-      </button>
-      <button class="ctrl-btn" id="btnFullscreenToggle" title="Tela Cheia (F)">
-        ⛶ <span class="kbd-tag">F</span>
-      </button>
+    <div class="top-actions">
+      <div class="brand-box" style="border-color: #cbd5e1;">
+        <span style="color: var(--emerald); font-weight: 700;">Score: 98/100</span> &bull; Homologado
+      </div>
+      <div class="nav-btn-group">
+        <button class="btn" id="btnNotesToggle" title="Notas do Apresentador (N)">
+          Notas <span class="kbd">N</span>
+        </button>
+        <button class="btn" id="btnOverviewToggle" title="Grid dos Slides (O)">
+          Índice <span class="kbd">O</span>
+        </button>
+        <button class="btn" id="btnFullscreenToggle" title="Tela Cheia (F)">
+          Tela Cheia <span class="kbd">F</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Main Slide Deck Viewport -->
-  <main class="deck-container">
+  <!-- Viewport Slide Deck -->
+  <main class="viewport">
 
     <!-- ================= SLIDE 1: CAPA OFICIAL ================= -->
-    <section class="slide active" data-slide="1" data-notes="Boa noite a todos, professor Arlley e colegas. Hoje apresentamos o projeto de Engenharia de Infraestrutura e Redes de Conectividade do Novo Complexo Portuário de São Luís. Este projeto foi desenvolvido para atender com excelência todos os requisitos do Problema 1, partindo de uma auditoria minuciosa, passando pelo saneamento metódico de sobreposição de sub-redes e culminando no laboratório mestre unificado com 104 dispositivos.">
-      <div class="slide-header" style="text-align: center; margin-top: auto; margin-bottom: 24px;">
-        <span class="pill pill-cyan" style="font-size: 0.85rem; padding: 6px 16px; margin-bottom: 16px;">Defesa Oficial &bull; Problema 1 (2026.2)</span>
-        <h1 class="slide-title" style="font-size: 3.2rem; max-width: 1000px; margin: 0 auto; letter-spacing: -0.03em;">
-          Infraestrutura e Conectividade para o Novo Complexo Portuário de São Luís
+    <section class="slide active" data-slide="1" data-notes="Boa noite a todos, professor Arlley e colegas. Hoje apresentamos a defesa oficial do projeto de Infraestrutura de Redes do Complexo Portuário de São Luís. Este trabalho cumpre integralmente todas as exigências do Problema 1: realizamos a auditoria completa, saneamos os conflitos graves de sub-redes identificados nos projetos originais e centralizamos 100% da solução em um laboratório mestre unificado no Cisco Packet Tracer com 104 ativos e 84 enlaces.">
+      <div class="slide-header" style="text-align: center; border-bottom: none; margin-top: auto; margin-bottom: 24px;">
+        <span class="badge badge-navy" style="font-size: 0.8rem; padding: 4px 12px; margin-bottom: 12px;">Relatório & Apresentação Final &bull; Problema 1</span>
+        <h1 class="slide-title" style="font-size: 2.9rem; max-width: 1040px; margin: 0 auto; color: var(--navy);">
+          Infraestrutura de Redes e Conectividade Empresarial
         </h1>
-        <p class="slide-subtitle" style="font-size: 1.35rem; color: var(--text-secondary); margin-top: 12px;">
-          Arquitetura Lógica, Cabeamento Estruturado, Segurança e Unificação de Campus no Porto do Itaqui
+        <p class="slide-subtitle" style="font-size: 1.25rem; color: var(--text-sub); margin-top: 8px;">
+          Projeto de Engenharia, Cabeamento Estruturado e Laboratório Unificado para o Terminal Portuário de São Luís
         </p>
       </div>
 
       <div class="slide-body" style="align-items: center; justify-content: center; margin-bottom: auto;">
-        <div class="grid-4" style="width: 100%; max-width: 1080px; margin-top: 12px;">
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--cyan);">R$ 2,5 Bi</div>
-            <div class="stat-label">Investimento Total</div>
+        <div class="grid-4" style="width: 100%; max-width: 1080px; margin-top: 10px;">
+          <div class="stat-card">
+            <div class="stat-val">R$ 2,5 Bi</div>
+            <div class="stat-title">Investimento Total</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--emerald);">125.340 m²</div>
-            <div class="stat-label">Área do Complexo</div>
+          <div class="stat-card">
+            <div class="stat-val">125.340 m²</div>
+            <div class="stat-title">Área do Complexo</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--violet);">104 Ativos</div>
-            <div class="stat-label">Dispositivos Master</div>
+          <div class="stat-card">
+            <div class="stat-val">104</div>
+            <div class="stat-title">Dispositivos Master</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--amber);">84 Links</div>
-            <div class="stat-label">Backbone e Acesso</div>
+          <div class="stat-card">
+            <div class="stat-val">84</div>
+            <div class="stat-title">Enlaces Ativos</div>
           </div>
         </div>
 
-        <div style="display: flex; gap: 32px; align-items: center; justify-content: center; margin-top: 36px; font-size: 0.95rem; color: var(--text-secondary);">
-          <div>🏫 <strong>Instituição:</strong> Centro Universitário UNDB</div>
-          <div>👨‍🏫 <strong>Docente:</strong> Prof. Arlley Costa</div>
-          <div>📅 <strong>Data de Entrega:</strong> 17 de Setembro de 2026</div>
+        <div style="display: flex; gap: 32px; align-items: center; justify-content: center; margin-top: 36px; font-size: 0.9rem; color: var(--text-sub); border-top: 1px solid var(--border-color); padding-top: 20px; width: 100%; max-width: 900px;">
+          <div><strong>Instituição:</strong> Centro Universitário UNDB</div>
+          <div><strong>Componente:</strong> UNDB 4.0 Infraestrutura de Redes</div>
+          <div><strong>Docente:</strong> Prof. Arlley Costa</div>
+          <div><strong>Data:</strong> 17/09/2026</div>
         </div>
       </div>
     </section>
 
     <!-- ================= SLIDE 2: BUSINESS CASE & CONTEXTO ================= -->
-    <section class="slide" data-slide="2" data-notes="No Business Case do projeto, analisamos a relevância estratégica do Maranhão no comércio exterior. O Porto do Itaqui movimenta mais de 3,7 milhões de toneladas por mês, impulsionado pelo escoamento de grãos do MATOPI. O investimento de 2,5 bilhões cria 2.500 postos de trabalho. A conectividade de rede não é apenas suporte; é o sistema nervoso que garante balanças automáticas, pesagem férrea, guindastes e controle alfandegário sem interrupções.">
+    <section class="slide" data-slide="2" data-notes="No Business Case, justificamos o projeto com base no cenário econômico do Maranhão. O Porto do Itaqui bateu recorde histórico com 3,7 milhões de toneladas movimentadas em um único mês. O projeto do terminal portuário demanda R$ 2,5 bilhões e cria 2.500 postos de trabalho. A conectividade de rede é um pilar de sobrevivência operacional: cada hora de navio parado por falha de sistema custa até 50 mil dólares em demurrage.">
       <div class="slide-header">
-        <div class="slide-category">Requisito 2 &bull; Contexto Macroeconômico</div>
-        <h2 class="slide-title">Business Case & Expansão Logística Portuária</h2>
-        <p class="slide-subtitle">Sustentação tecnológica para o maior corredor de exportação de granéis do Norte/Nordeste</p>
+        <span class="slide-tag">Requisito 2 &bull; Business Case & Macroeconomia</span>
+        <h2 class="slide-title">Contexto Estratégico & Expansão Logística</h2>
+        <p class="slide-subtitle">Sustentação tecnológica para o maior corredor de exportação de grãos do Norte/Nordeste</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-cyan">
-            <div class="card-title">🌊 Posicionamento Estratégico & Baía de São Marcos</div>
-            <div class="card-desc">
-              <p>O Maranhão abriga um dos complexos portuários mais profundos e eficientes do mundo, com calado natural superior a 20 metros, capaz de receber navios graneleiros tipo <em>Valemax</em> e <em>Capesize</em> sem restrição de maré.</p>
-              <ul class="feature-list" style="margin-top: 14px;">
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Corredor MATOPI:</strong> Escoamento primário de safras de soja e milho do Maranhão, Tocantins e Piauí.</span></li>
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Recorde Operacional:</strong> Movimentação mensal contínua acima de 3,7 milhões de toneladas de granéis e combustíveis.</span></li>
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Novo Berço 098:</strong> Expansão de píer dedicada para atracação simultânea de navios de grande porte.</span></li>
+          <div class="box border-navy">
+            <div class="box-title">🌊 Vocação Marítima & Baía de São Marcos</div>
+            <div class="box-desc">
+              <p>O Maranhão abriga um dos complexos portuários mais estratégicos do hemisfério sul, com calado natural superior a 20 metros, capaz de receber navios de grande porte sem restrição de maré.</p>
+              <ul class="checklist" style="margin-top: 14px;">
+                <li><span class="check-icon blue">✔</span> <span><strong>Corredor MATOPI:</strong> Escoamento da produção agrícola de grãos (soja e milho) do Maranhão, Tocantins e Piauí.</span></li>
+                <li><span class="check-icon blue">✔</span> <span><strong>Recorde de Movimentação:</strong> Mais de 3,7 milhões de toneladas de granéis e combustíveis escoados mensalmente.</span></li>
+                <li><span class="check-icon blue">✔</span> <span><strong>Expansão do Berço 098:</strong> Novo píer especializado para atender à crescente demanda internacional.</span></li>
               </ul>
             </div>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">💼 Justificativa do Investimento em TI / Telecom</div>
-            <div class="card-desc">
-              <p>Uma parada não planejada na operação portuária gera prejuízos de até <strong>US$ 50.000 por hora</strong> em <em>demurrage</em> de navios atracados. A infraestrutura de redes é classificada como ativo de missão crítica:</p>
-              <div class="grid-2" style="margin-top: 14px; gap: 12px;">
-                <div class="stat-box" style="padding: 10px;">
-                  <div class="stat-num" style="font-size: 1.4rem; color: var(--emerald);">2.500+</div>
-                  <div class="stat-label">Empregos Diretos</div>
+          <div class="box border-emerald">
+            <div class="box-title">💼 Retorno sobre Investimento (ROI) em Telecomunicações</div>
+            <div class="box-desc">
+              <p>A paralisação de um berço por falha de conectividade gera multas de <em>demurrage</em> de até <strong>US$ 50.000 por hora</strong>. A infraestrutura de redes é tratada como elemento de missão crítica:</p>
+              <div class="grid-2" style="margin-top: 12px; gap: 10px;">
+                <div class="stat-card" style="padding: 10px;">
+                  <div class="stat-val" style="font-size: 1.5rem; color: var(--emerald);">2.500+</div>
+                  <div class="stat-title">Empregos Diretos</div>
                 </div>
-                <div class="stat-box" style="padding: 10px;">
-                  <div class="stat-num" style="font-size: 1.4rem; color: var(--cyan);">99,99%</div>
-                  <div class="stat-label">SLA de Conectividade</div>
+                <div class="stat-card" style="padding: 10px;">
+                  <div class="stat-val" style="font-size: 1.5rem; color: var(--navy);">99,99%</div>
+                  <div class="stat-title">Disponibilidade Alvo</div>
                 </div>
               </div>
-              <ul class="feature-list" style="margin-top: 14px;">
-                <li><span class="icon icon-emerald">✔</span> <span>Integração de balanças rodoviárias, pórticos RFID e leitores de contêineres OCR.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span>Telemetria em tempo real de sensores industriais de umidade e temperatura nos silos.</span></li>
+              <ul class="checklist" style="margin-top: 14px;">
+                <li><span class="check-icon green">✔</span> <span>Telemetria em tempo real de balanças dinâmicas e portões alfandegados.</span></li>
+                <li><span class="check-icon green">✔</span> <span>Garantia de despacho aduaneiro contínuo integrado à Receita Federal e CCO.</span></li>
               </ul>
             </div>
           </div>
@@ -743,48 +717,48 @@ def generate_presentation():
       </div>
     </section>
 
-    <!-- ================= SLIDE 3: REQUISITOS & MATRIZ DE RISCOS ================= -->
-    <section class="slide" data-slide="3" data-notes="Para atender ao Requisito 2 do edital, levantamos os requisitos e riscos de arquitetura. Ambientes portuários impõem desafios severos: maresia corrosiva no cais, poeira orgânica explosiva nos silos e vibração contínua na linha férrea. Para cada risco, aplicamos contramedidas técnicas rigorosas: cabos de fibra óptica monomodo dielétricos anti-indução, switches industriais IP67 e isolamento físico por tubulações galvanizadas.">
+    <!-- ================= SLIDE 3: REQUISITOS & RISCOS ================= -->
+    <section class="slide" data-slide="3" data-notes="No Requisito 2, detalhamos o levantamento de requisitos e a matriz de riscos de engenharia. Cada área do porto impõe condições hostis: salinidade corrosiva no cais do berço 098, pó inflamável nos silos de grãos e vibração contínua na pera ferroviária. Para cada risco, aplicamos soluções consolidadas de mercado: caixas herméticas NEMA 4X, eletrocalhas blindadas para Zona Ex e cabos de fibra óptica dielétricos imunes a interferências.">
       <div class="slide-header">
-        <div class="slide-category">Requisito 2 &bull; Análise de Engenharia</div>
-        <h2 class="slide-title">Requisitos de Infraestrutura & Matriz de Riscos</h2>
-        <p class="slide-subtitle">Engenharia de resiliência aplicada a ambientes agressivos industriais e marítimos</p>
+        <span class="slide-tag">Requisito 2 &bull; Engenharia & Confiabilidade</span>
+        <h2 class="slide-title">Requisitos de Conectividade & Matriz de Riscos</h2>
+        <p class="slide-subtitle">Engenharia de mitigação para ambientes industriais severos e agressividade salina</p>
       </div>
       <div class="slide-body">
-        <div class="grid-3" style="margin-bottom: 16px;">
-          <div class="card highlight-rose">
-            <div class="card-title" style="color: var(--rose);">⚠️ Risco 1: Salinidade & Maresia</div>
-            <div class="card-desc">
-              <p><strong>Impacto:</strong> Corrosão acelerada de portas RJ45 de cobre e oxidação precoce de gabinetes no Berço 098.</p>
-              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Racks herméticos NEMA 4X / IP66, conectores industriais selados e links de longa distância 100% ópticos.</p>
+        <div class="grid-3" style="margin-bottom: 14px;">
+          <div class="box border-red">
+            <div class="box-title" style="color: var(--red);">Risco 1: Salinidade & Maresia</div>
+            <div class="box-desc">
+              <p><strong>Causa/Impacto:</strong> Oxidação prematura de portas metálicas RJ45 e falhas em gabinetes próximos ao mar no Berço 098.</p>
+              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Racks herméticos NEMA 4X (IP66), cabeamento óptico em backbone e conectores industriais vedados.</p>
             </div>
           </div>
 
-          <div class="card highlight-amber">
-            <div class="card-title" style="color: var(--amber);">⚡ Risco 2: Poeira de Grãos (Zona Ex)</div>
-            <div class="card-desc">
-              <p><strong>Impacto:</strong> Suspensão de partículas condutivas de soja/milho com risco de ignição eletrostática no Silo.</p>
-              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Eletrocalhas blindadas à prova de explosão (Ex), cabos LSZH e switch industrial de temperatura estendida.</p>
+          <div class="box border-amber">
+            <div class="box-title" style="color: var(--amber);">Risco 2: Poeira de Grãos (Zona Ex)</div>
+            <div class="box-desc">
+              <p><strong>Causa/Impacto:</strong> Poeira em suspensão de soja e milho no Silo com risco de centelhamento e atmosfera explosiva.</p>
+              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Tubulações galvanizadas à prova de explosão, cabos com capa LSZH e switch industrial fanless.</p>
             </div>
           </div>
 
-          <div class="card highlight-violet">
-            <div class="card-title" style="color: var(--violet);">🚂 Risco 3: Vibração & EMI Férrea</div>
-            <div class="card-desc">
-              <p><strong>Impacto:</strong> Trepidação mecânica de composições de 120 vagões e interferência eletromagnética de motores.</p>
-              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Fibras ópticas dielétricas subterrâneas (sem condutor metálico) e bandejamento anti-impacto.</p>
+          <div class="box border-blue">
+            <div class="box-title" style="color: var(--blue);">Risco 3: Vibração & Ruído Férreo</div>
+            <div class="box-desc">
+              <p><strong>Causa/Impacto:</strong> Trepidação mecânica intensa e interferência eletromagnética (EMI) de locomotivas na Pera.</p>
+              <p style="margin-top: 8px; color: var(--emerald);"><strong>Mitigação:</strong> Fibras ópticas dielétricas subterrâneas (sem partes metálicas) e bandejamento reforçado.</p>
             </div>
           </div>
         </div>
 
-        <div class="card" style="background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.06);">
+        <div class="box" style="background: #ffffff;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">Normas Técnicas Norteadoras Adotadas no Projeto:</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Normas Técnicas Norteadoras Adotadas no Projeto:</div>
             <div style="display: flex; gap: 8px;">
-              <span class="pill pill-cyan">ANSI/TIA-568-D</span>
-              <span class="pill pill-emerald">ISO/IEC 11801</span>
-              <span class="pill pill-violet">NBR 14565</span>
-              <span class="pill pill-amber">IEEE 802.3ae (10GbE)</span>
+              <span class="badge badge-navy">ANSI/TIA-568-D</span>
+              <span class="badge badge-green">ISO/IEC 11801</span>
+              <span class="badge badge-blue">ABNT NBR 14565</span>
+              <span class="badge badge-amber">IEEE 802.3ae</span>
             </div>
           </div>
         </div>
@@ -792,69 +766,69 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 4: AUDITORIA DIAGNÓSTICA ================= -->
-    <section class="slide" data-slide="4" data-notes="Aqui entramos no diferencial de engenharia desta entrega: a Auditoria Técnica Independente. Ao recebermos os 5 arquivos individuais feitos pelas duplas, detectamos um problema gravíssimo: 4 dos 5 setores usavam a mesma faixa 192.168.0.0 e 192.168.1.0. Se esses prédios fossem ligados fisicamente, haveria colisão catastrófica de IPs e indisponibilidade imediata de rede. Além disso, havia nós em APIPA (169.254.x.x) por falta de DHCP configurado. Reprovamos a infraestrutura inicial com Score 58/100 para aplicar saneamento metódico.">
+    <section class="slide" data-slide="4" data-notes="Aqui está o ponto central de diferenciação técnica: a auditoria prévia. Ao consolidar os projetos originais entregues pelas duplas, identificamos que 4 dos 5 prédios utilizavam as mesmas faixas privadas 192.168.0.0 e 192.168.1.0. Se conectados em campus, isso geraria colisão generalizada de IP. Havia ainda 14 câmeras operando em APIPA (169.254.x.x) por falta de servidor DHCP. Emitimos um parecer técnico reprovando a topologia original (Score 58) e traçamos o saneamento completo.">
       <div class="slide-header">
-        <div class="slide-category">Diagnóstico Técnico &bull; Auditoria Prévia</div>
-        <h2 class="slide-title">Auditoria Independente dos 5 Projetos Submetidos</h2>
-        <p class="slide-subtitle">Identificação cirúrgica de sobreposição de sub-redes IPv4 e anomalias de Camada 2/3</p>
+        <span class="slide-tag">Auditoria Técnica Independente</span>
+        <h2 class="slide-title">Auditoria Diagnóstica dos Arquivos Originais</h2>
+        <p class="slide-subtitle">Constatação de conflitos graves de sobreposição IPv4 e plano de saneamento metódico</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-rose">
-            <div class="card-title">❌ O Cenário Inicial (Score Original: 58 / 100)</div>
-            <div class="card-desc">
-              <p>Cada equipe entregou seu arquivo isoladamente sem governança corporativa de blocos IP, gerando incompatibilidade fatal para uma rede de campus:</p>
-              <table class="slide-table" style="margin-top: 10px;">
+          <div class="box border-red">
+            <div class="box-title" style="color: var(--red);">Cenário Inicial Reprovado (Score: 58 / 100)</div>
+            <div class="box-desc">
+              <p>Os setores foram concebidos de forma isolada, gerando incompatibilidade direta para integração em rede corporativa:</p>
+              <table class="table-clean" style="margin-top: 10px;">
                 <thead>
                   <tr>
-                    <th>Setor</th>
-                    <th>Faixa Original</th>
-                    <th>Gravidade</th>
+                    <th>Setor Submetido</th>
+                    <th>Faixa IPv4 Original</th>
+                    <th>Problema Técnico</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Portaria TP</td>
-                    <td><code class="code-mono" style="color: var(--rose);">192.168.10-50.0/24</code></td>
-                    <td><span class="pill pill-rose">Conflito Grave</span></td>
+                    <td><strong>Portaria TP</strong></td>
+                    <td><code class="code">192.168.10.0-50.0/24</code></td>
+                    <td><span class="badge badge-red">Colisão de IP</span></td>
                   </tr>
                   <tr>
-                    <td>Inspetoria / CCO</td>
-                    <td><code class="code-mono" style="color: var(--rose);">192.168.0-3.0/24</code></td>
-                    <td><span class="pill pill-rose">Conflito Grave</span></td>
+                    <td><strong>Inspetoria / CCO</strong></td>
+                    <td><code class="code">192.168.0.0-3.0/24</code></td>
+                    <td><span class="badge badge-red">Colisão de IP</span></td>
                   </tr>
                   <tr>
-                    <td>Pera Ferroviária</td>
-                    <td><code class="code-mono" style="color: var(--rose);">192.168.1.0/24 + APIPA</code></td>
-                    <td><span class="pill pill-rose">Falha Crítica</span></td>
+                    <td><strong>Pera Ferroviária</strong></td>
+                    <td><code class="code">192.168.1.0/24 + APIPA</code></td>
+                    <td><span class="badge badge-red">10 Câmeras sem DHCP</span></td>
                   </tr>
                   <tr>
-                    <td>Silo de Grãos</td>
-                    <td><code class="code-mono" style="color: var(--rose);">192.168.0.1/24 + APIPA</code></td>
-                    <td><span class="pill pill-rose">Conflito Grave</span></td>
+                    <td><strong>Silo de Grãos</strong></td>
+                    <td><code class="code">192.168.0.1/24 + APIPA</code></td>
+                    <td><span class="badge badge-red">Colisão de IP</span></td>
                   </tr>
                   <tr>
-                    <td>Prédio ADM</td>
-                    <td><code class="code-mono" style="color: var(--emerald);">10.20.0.0/16</code></td>
-                    <td><span class="pill pill-emerald">Conforme</span></td>
+                    <td><strong>Prédio Administrativo</strong></td>
+                    <td><code class="code">10.20.0.0/16</code></td>
+                    <td><span class="badge badge-green">Conforme</span></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">🎯 Plano de Saneamento Gradual em Duas Fases</div>
-            <div class="card-desc">
-              <p>Para cumprir a diretriz de <em>'algo sólido, sem gambiarras e profissional'</em>, traçamos uma jornada técnica estruturada:</p>
-              <ul class="feature-list" style="margin-top: 12px;">
-                <li><span class="icon icon-emerald">1</span> <span><strong>Preservação de Cópias Intactas:</strong> Geração de arquivos <code>.original.pkt</code> de cada entrega para rastreabilidade acadêmica.</span></li>
-                <li><span class="icon icon-emerald">2</span> <span><strong>Fase 1 - Saneamento Setorial:</strong> Migração de cada arquivo individual para blocos não conflitantes da hierarquia corporativa.</span></li>
-                <li><span class="icon icon-emerald">3</span> <span><strong>Fase 2 - Unificação Master:</strong> Consolidação dos 5 prédios interligados ao Core Datacenter com sincronização física e lógica total.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title" style="color: var(--emerald);">A Abordagem Profissional de Saneamento</div>
+            <div class="box-desc">
+              <p>Seguindo a instrução de <em>'algo sólido, profissional e sem gambiarras'</em>, realizamos a migração estruturada:</p>
+              <ul class="checklist" style="margin-top: 12px;">
+                <li><span class="check-icon green">1</span> <span><strong>Preservação Integral:</strong> Criação de cópias intactas de segurança com sufixo <code class="code">.original.pkt</code> em cada pasta setorial.</span></li>
+                <li><span class="check-icon green">2</span> <span><strong>Fase 1 - Saneamento Individual:</strong> Migração de cada arquivo setorial para o superbloco corporativo <code class="code">10.100.0.0/16</code> com VLSM.</span></li>
+                <li><span class="check-icon green">3</span> <span><strong>Fase 2 - Unificação Master:</strong> Consolidação dos 5 prédios em um único laboratório com reconciliação física e lógica total.</span></li>
               </ul>
-              <div class="stat-box" style="margin-top: 14px; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
-                <div class="stat-num" style="color: var(--emerald); font-size: 1.8rem;">98 / 100</div>
-                <div class="stat-label">Novo Score Global de Homologação Pós-Saneamento</div>
+              <div class="stat-card" style="margin-top: 14px; background: var(--emerald-subtle); border-color: rgba(21, 128, 61, 0.25);">
+                <div class="stat-val" style="color: var(--emerald); font-size: 1.8rem;">98 / 100</div>
+                <div class="stat-title">Score Global Homologado Pós-Saneamento</div>
               </div>
             </div>
           </div>
@@ -863,143 +837,143 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 5: VLSM & PLANO MESTRE IP ================= -->
-    <section class="slide" data-slide="5" data-notes="Para resolver as colisões, desenhamos um plano mestre de endereçamento baseado na RFC 1918 com VLSM (Variable Length Subnet Masking). Adotamos o bloco 10.100.0.0/16 para toda a área operacional externa e preservamos o bloco 10.20.0.0/16 para o Prédio Administrativo e Datacenter. Cada prédio recebeu um bloco hierárquico sumarizável, permitindo rotas simples, facilidade de expansão e isolamento por VLANs.">
+    <section class="slide" data-slide="5" data-notes="Para o Requisito 1, adotamos a metodologia VLSM com base na RFC 1918. Reservamos o superbloco 10.100.0.0/16 para os setores operacionais externos e mantivemos o bloco 10.20.0.0/16 para o Prédio Administrativo e Datacenter. Esse esquema é hierárquico e sumarizável: com apenas uma rota estática de campus (ip route 10.100.0.0 255.255.0.0 10.255.20.2), o roteador de borda alcança todos os outros 4 setores portuários.">
       <div class="slide-header">
-        <div class="slide-category">Requisito 1 &bull; Arquitetura Lógica</div>
-        <h2 class="slide-title">Plano Mestre de Endereçamento VLSM (10.100.0.0/16)</h2>
-        <p class="slide-subtitle">Hierarquia de sub-redes sem desperdício de endereços e com capacidade de expansão modular</p>
+        <span class="slide-tag">Requisito 1 &bull; Arquitetura de Endereçamento</span>
+        <h2 class="slide-title">Plano Mestre Corporativo VLSM (10.100.0.0/16)</h2>
+        <p class="slide-subtitle">Hierarquia de sub-redes sem desperdício de endereços e suporte a rotas sumarizadas</p>
       </div>
       <div class="slide-body">
-        <div class="card" style="margin-bottom: 16px;">
-          <table class="slide-table">
+        <div class="box" style="margin-bottom: 14px; padding: 0; overflow: hidden;">
+          <table class="table-clean" style="margin: 0; border: none;">
             <thead>
               <tr>
                 <th>Setor Portuário</th>
                 <th>Bloco Alocado</th>
                 <th>Máscara</th>
-                <th>Hosts Úteis</th>
-                <th>VLANs & Serviços Contemplados</th>
+                <th>Capacidade</th>
+                <th>VLANs & Escopo de Conectividade</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Prédio Administrativo</strong></td>
-                <td><code class="code-mono">10.20.0.0/16</code></td>
+                <td><code class="code">10.20.0.0/16</code></td>
                 <td>255.255.0.0</td>
-                <td>65.534</td>
-                <td>VLANs 110-170 (TI, RH, Diretoria), 180 (SAN/NAS Storage), 190 (CFTV) e 200 (Wi-Fi)</td>
+                <td>65.534 hosts</td>
+                <td>VLANs 110-170 (Departamentos), 180 (SAN/NAS Storage), 190 (CFTV) e 200 (Wi-Fi)</td>
               </tr>
               <tr>
                 <td><strong>Pera Ferroviária</strong></td>
-                <td><code class="code-mono">10.100.16.0/21</code></td>
+                <td><code class="code">10.100.16.0/21</code></td>
                 <td>255.255.248.0</td>
-                <td>2.046</td>
-                <td>VLAN 210: Balanças rodoviárias/férreas, 10 Câmeras industriais PTZ e telemetria CCO</td>
+                <td>2.046 hosts</td>
+                <td>VLAN 210: 2 Balanças rodoviárias/férreas, 10 Câmeras industriais e CCO</td>
               </tr>
               <tr>
                 <td><strong>Silo de Grãos</strong></td>
-                <td><code class="code-mono">10.100.24.0/22</code></td>
+                <td><code class="code">10.100.24.0/22</code></td>
                 <td>255.255.252.0</td>
-                <td>1.022</td>
-                <td>VLAN 220: Sensores industriais IoT, controle de acesso e CFTV perimetral</td>
+                <td>1.022 hosts</td>
+                <td>VLAN 220: Sensores IoT industriais de gases/temperatura e CFTV perimetral</td>
               </tr>
               <tr>
                 <td><strong>Portaria TP</strong></td>
-                <td><code class="code-mono">10.100.28.0/23</code></td>
+                <td><code class="code">10.100.28.0/23</code></td>
                 <td>255.255.254.0</td>
-                <td>510</td>
-                <td>Particionamento VLSM em blocos <code>/28</code>: Recepção, CFTV, Catracas RFID e Telefonia IP</td>
+                <td>510 hosts</td>
+                <td>Sub-redes /28 para Recepção, Catraca RFID, Telefonia IP e Câmeras</td>
               </tr>
               <tr>
-                <td><strong>Inspetoria / CCO Berço 098</strong></td>
-                <td><code class="code-mono">10.100.32.0/21</code></td>
+                <td><strong>Inspetoria & CCO Píer</strong></td>
+                <td><code class="code">10.100.32.0/21</code></td>
                 <td>255.255.248.0</td>
-                <td>2.046</td>
-                <td>VLANs 310-350: 8 Consoles marítimos, Automação industrial, Wi-Fi e Telefonia</td>
+                <td>2.046 hosts</td>
+                <td>VLANs 310-350: 8 Consoles marítimos, Automação industrial e Câmeras</td>
               </tr>
-              <tr style="background: rgba(6, 182, 212, 0.08); font-weight: 600;">
-                <td><strong>Backbone Campus (Inter-Roteadores)</strong></td>
-                <td><code class="code-mono">10.255.20.0/30</code></td>
+              <tr style="background: #f8fafc; font-weight: 600;">
+                <td><strong>Trânsito Inter-Roteadores</strong></td>
+                <td><code class="code">10.255.20.0/30</code></td>
                 <td>255.255.255.252</td>
-                <td>2</td>
-                <td>Link ponto-a-ponto de trânsito em fibra óptica entre RTR-CAMPUS e GW-ADM-01</td>
+                <td>2 hosts</td>
+                <td>Enlace ponto-a-ponto em fibra óptica entre RTR-CAMPUS e GW-ADM-01</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="grid-3">
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--emerald);">0</div>
-            <div class="stat-label">Conflitos de IPs Restantes</div>
+          <div class="stat-card">
+            <div class="stat-val" style="color: var(--emerald);">0</div>
+            <div class="stat-title">Conflitos de Endereçamento</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--cyan);">100%</div>
-            <div class="stat-label">Sub-redes Sumarizáveis</div>
+          <div class="stat-card">
+            <div class="stat-val" style="color: var(--navy);">100%</div>
+            <div class="stat-title">Sub-redes Sumarizáveis</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color: var(--violet);">RFC 1918</div>
-            <div class="stat-label">Conformidade Global de Redes</div>
+          <div class="stat-card">
+            <div class="stat-val" style="color: var(--blue);">RFC 1918</div>
+            <div class="stat-title">Conformidade e Boas Práticas</div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ================= SLIDE 6: PORTARIA TP ================= -->
-    <section class="slide" data-slide="6" data-notes="No Setor 1 - Portaria TP, atendemos à risca o layout de recepção: 1 mesa de atendente com PC e telefone IP, 1 impressora de rede, 1 catraca com controle de acesso biométrico/RFID, 2 câmeras internas e 2 externas nas fachadas A e B. Aplicamos VLSM em blocos barra 28 para cada função, garantindo que o tráfego das câmeras não dispute banda com a telefonia ou os dados da recepção.">
+    <section class="slide" data-slide="6" data-notes="Na Portaria TP, atendemos à risca o layout especificado no problema: 1 mesa de recepcionista com computador e telefone IP, 1 impressora de rede, 1 catraca com leitor RFID para pedestres, 2 câmeras internas na recepção e 2 externas nas fachadas A e B. Aplicamos sub-redes barra 28 com isolamento de tráfego, garantindo que o fluxo intenso de vídeo do CFTV não prejudique as chamadas de voz ou a emissão de crachás.">
       <div class="slide-header">
-        <div class="slide-category">Setor 1 &bull; Controle de Entrada</div>
-        <h2 class="slide-title">Portaria TP: Recepção, Catracas & CFTV Perimetral</h2>
-        <p class="slide-subtitle">Arquitetura de acesso físico e controle de fluxo rodoviário do complexo portuário</p>
+        <span class="slide-tag">Setor 1 &bull; Controle de Acesso Rodoviário</span>
+        <h2 class="slide-title">Portaria TP: Recepção, Catracas & CFTV</h2>
+        <p class="slide-subtitle">Controle de fluxo de caminhões, identificação de pedestres e segurança de entrada</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-cyan">
-            <div class="card-title">🏢 Requisitos do Edital Atendidos</div>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Posto da Recepcionista:</strong> Computador <code class="code-mono">10.100.28.10</code> e Telefone IP corporativo.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Impressora de Rede:</strong> Impressão de crachás e guias em <code class="code-mono">10.100.28.11</code>.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Catraca Automatizada:</strong> Leitor RFID e biometria para pedestres em <code class="code-mono">10.100.28.50</code>.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>CFTV de Fachada:</strong> 2 câmeras internas (recepção) e 2 externas (Fachada A e Fachada B).</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Wi-Fi Visitantes:</strong> Access Point dedicado com pool DHCP isolado.</span></li>
+          <div class="box border-blue">
+            <div class="box-title">Equipamentos e Serviços da Portaria</div>
+            <ul class="checklist" style="margin-top: 10px;">
+              <li><span class="check-icon blue">✔</span> <span><strong>Mesa de Atendimento:</strong> Computador da recepcionista (<code class="code">10.100.28.10</code>) e Telefone IP corporativo.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Impressora de Rede:</strong> Emissão de guias alfandegárias em <code class="code">10.100.28.11</code>.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Catraca Automatizada:</strong> Leitor biométrico/RFID para liberação de pedestres em <code class="code">10.100.28.50</code>.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>CFTV de Fachada:</strong> 2 câmeras internas e 2 externas (Fachada A e Fachada B).</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Wi-Fi Visitantes:</strong> Access Point com pool DHCP isolado para transportadores.</span></li>
             </ul>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">⚡ Segmentação Lógica por Função (VLSM /28)</div>
-            <div class="card-desc">
-              <p>Isolamento rigoroso de domínios de broadcast para alta segurança e QoS de voz:</p>
-              <table class="slide-table" style="margin-top: 10px;">
+          <div class="box border-navy">
+            <div class="box-title">Segmentação Lógica de Serviços (VLSM /28)</div>
+            <div class="box-desc">
+              <p>Cada função opera em uma sub-rede dedicada para contenção de broadcast e garantia de QoS:</p>
+              <table class="table-clean" style="margin-top: 10px;">
                 <thead>
                   <tr>
                     <th>Sub-rede</th>
                     <th>Finalidade</th>
-                    <th>Dispositivos</th>
+                    <th>Hosts Ativos</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><code class="code-mono">10.100.28.0/28</code></td>
+                    <td><code class="code">10.100.28.0/28</code></td>
                     <td>Dados Recepção</td>
                     <td>PC Recepção, Impressora</td>
                   </tr>
                   <tr>
-                    <td><code class="code-mono">10.100.28.16/28</code></td>
+                    <td><code class="code">10.100.28.16/28</code></td>
                     <td>Voz sobre IP (VoIP)</td>
-                    <td>Telefone IP com QoS 802.1p</td>
+                    <td>Telefone IP corporativo</td>
                   </tr>
                   <tr>
-                    <td><code class="code-mono">10.100.28.32/28</code></td>
+                    <td><code class="code">10.100.28.32/28</code></td>
                     <td>CFTV Segurança</td>
                     <td>4 Câmeras HD PoE</td>
                   </tr>
                   <tr>
-                    <td><code class="code-mono">10.100.28.48/28</code></td>
+                    <td><code class="code">10.100.28.48/28</code></td>
                     <td>Controle de Acesso</td>
                     <td>Controladora de Catraca RFID</td>
                   </tr>
                   <tr>
-                    <td><code class="code-mono">10.100.28.128/28</code></td>
+                    <td><code class="code">10.100.28.128/28</code></td>
                     <td>Gerência Ativos</td>
                     <td>Switch e Roteador da Portaria</td>
                   </tr>
@@ -1012,32 +986,32 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 7: PRÉDIO ADMINISTRATIVO ================= -->
-    <section class="slide" data-slide="7" data-notes="O Prédio Administrativo é o coração do projeto. Adotamos a arquitetura do layout Futurestep: proporção de 80% notebooks e 20% desktops, estações de trabalho com telefonia IP individual, salas de reunião com videoconferência integrada, 3 impressoras departamentais, controle de acesso e Datacenter com 3 servidores multifunção e Storage SAN/NAS. Além disso, incorporamos a alteração recente que adicionou as 3 PDUs de rack (Power Distribution Devices), totalizando 39 ativos neste setor.">
+    <section class="slide" data-slide="7" data-notes="O Prédio Administrativo abriga a gestão executiva e o Datacenter principal. Seguimos as diretrizes do layout Futurestep: proporção de 80% notebooks e 20% desktops, salas de reunião com equipamentos de videoconferência, telefonia IP em todas as mesas, 3 impressoras departamentais, controle de acesso e Datacenter com 3 servidores multifunção e Storage SAN/NAS. Incorporamos a alteração recente das 3 unidades de distribuição de energia (PDUs de rack), totalizando 39 dispositivos nesta seção.">
       <div class="slide-header">
-        <div class="slide-category">Setor 2 &bull; Núcleo Estratégico</div>
+        <span class="slide-tag">Setor 2 &bull; Núcleo de Governança & Datacenter</span>
         <h2 class="slide-title">Prédio Administrativo & Datacenter Central</h2>
         <p class="slide-subtitle">Arquitetura corporativa Futurestep, virtualização de servidores e storage SAN/NAS</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-violet">
-            <div class="card-title">🖥️ Infraestrutura Corporativa (39 Dispositivos)</div>
-            <ul class="feature-list" style="margin-top: 8px;">
-              <li><span class="icon icon-violet">✔</span> <span><strong>Relação 80/20:</strong> Mobilidade ampla com notebooks conectados a 4 Access Points Wi-Fi 6 e desktops em postos fixos.</span></li>
-              <li><span class="icon icon-violet">✔</span> <span><strong>Videoconferência & Voz:</strong> Codecs de VC em todas as salas de reunião e telefonia IP nas baias de trabalho.</span></li>
-              <li><span class="icon icon-violet">✔</span> <span><strong>3 Impressoras de Rede:</strong> Alocadas na Recepção, Administração Geral e Diretoria.</span></li>
-              <li><span class="icon icon-violet">✔</span> <span><strong>PDUs Inteligentes:</strong> 3 unidades de distribuição de energia (Power Distribution Devices 0, 1 e 2) monitorando consumo nos racks.</span></li>
+          <div class="box border-navy">
+            <div class="box-title">Infraestrutura Corporativa (39 Dispositivos)</div>
+            <ul class="checklist" style="margin-top: 8px;">
+              <li><span class="check-icon blue">✔</span> <span><strong>Relação 80% Notebooks / 20% Desktops:</strong> Mobilidade ampla via 4 Access Points Wi-Fi 6 corporativos e estações fixas.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Videoconferência & VoIP:</strong> Salas de reunião com endpoints de VC e telefones IP em todas as baias de trabalho.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>3 Impressoras de Rede:</strong> Recepção, Administração Geral e Diretoria.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>PDUs de Rack Integradas:</strong> 3 unidades de distribuição de energia (Power Distribution Devices 0, 1 e 2) monitorando carga nos gabinetes.</span></li>
             </ul>
           </div>
 
-          <div class="card highlight-cyan">
-            <div class="card-title">🗄️ Datacenter On-Premise & SAN Storage</div>
-            <div class="card-desc">
-              <p>O Datacenter do Prédio ADM centraliza todos os serviços de missão crítica do complexo portuário:</p>
-              <ul class="feature-list" style="margin-top: 10px;">
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Servidores Host:</strong> 3 Servidores físicos redundantes executando VMs de DNS, RADIUS, NVR (CFTV) e Backup de Logs.</span></li>
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Storage SAN/NAS (VLAN 180):</strong> Armazenamento isolado de Camada 2 (<code class="code-mono">10.20.80.0/24</code>) para alta performance de I/O sem gateway.</span></li>
-                <li><span class="icon icon-cyan">✔</span> <span><strong>Roteamento de Campus:</strong> <code class="code-mono">RTR-CAMPUS</code> conectado à Internet simulada (<code class="code-mono">203.0.113.1</code>) e com rotas de trânsito para todo o bloco <code class="code-mono">10.100.0.0/16</code>.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title">Datacenter Central & Armazenamento SAN/NAS</div>
+            <div class="box-desc">
+              <p>O Datacenter do Prédio ADM hospeda os serviços corporativos e o sistema ERP portuário:</p>
+              <ul class="checklist" style="margin-top: 10px;">
+                <li><span class="check-icon green">✔</span> <span><strong>Servidores Virtuais:</strong> 3 Servidores físicos executando máquinas virtuais de DNS, RADIUS, NVR e Gerenciamento NMS.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Storage SAN/NAS (VLAN 180):</strong> Rede de armazenamento dedicada de Camada 2 (<code class="code">10.20.80.0/24</code>) para tráfego iSCSI sem gateway.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Roteador de Borda:</strong> <code class="code">RTR-CAMPUS</code> conectado à Internet (<code class="code">203.0.113.1</code>) com rota estática para o complexo (<code class="code">10.100.0.0/16</code>).</span></li>
               </ul>
             </div>
           </div>
@@ -1046,31 +1020,31 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 8: PERA FERROVIÁRIA ================= -->
-    <section class="slide" data-slide="8" data-notes="Na Pera Ferroviária, lidamos com uma extensão de 600 metros de linha férrea contínua. Os requisitos incluíam pontos de rede para duas balanças ferroviárias de pesagem dinâmica de vagões e 10 câmeras industriais para acompanhamento em tempo real pelo CCO. Na auditoria anterior, todas as câmeras estavam em APIPA (169.254.x.x). Nós saneamos o roteador, ativamos o pool DHCP na VLAN 210 (10.100.16.0/21) e garantimos link de fibra óptica imune a ruídos de motores diesel-elétricos.">
+    <section class="slide" data-slide="8" data-notes="Na Pera Ferroviária, temos uma extensão linear de 600 metros de linha de trem. Foram instalados pontos de rede para 2 balanças de pesagem dinâmica e 10 câmeras industriais para acompanhar manobras e descarga pelo CCO. Corrigimos a falha crítica anterior onde todas as câmeras estavam em APIPA (169.254.x.x), ativando o serviço DHCP na VLAN 210 (10.100.16.0/21) e utilizando cabo óptico dielétrico subterrâneo imune a motores elétricos.">
       <div class="slide-header">
-        <div class="slide-category">Setor 3 &bull; Logística Férrea</div>
-        <h2 class="slide-title">Pera Ferroviária: Pesagem Automática & Monitoramento</h2>
-        <p class="slide-subtitle">Cobertura de 600 metros de via férrea para escoamento ininterrupto de granéis</p>
+        <span class="slide-tag">Setor 3 &bull; Logística Férrea</span>
+        <h2 class="slide-title">Pera Ferroviária: Pesagem Automática & CCO Férreo</h2>
+        <p class="slide-subtitle">Cobertura de 600 metros de linha férrea para movimentação contínua de vagões</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-amber">
-            <div class="card-title">🚂 Desafios & Requisitos Atendidos</div>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li><span class="icon icon-amber">✔</span> <span><strong>Extensão Linear de 600 Metros:</strong> Distância superior ao limite de 100m do par trançado, exigindo backbone de fibra óptica monomodo ao longo da via.</span></li>
-              <li><span class="icon icon-amber">✔</span> <span><strong>Balanças Ferroviárias Dinâmicas:</strong> Pesagem automática de vagões sem necessidade de parada da composição, transmitindo dados diretamente ao ERP logístico.</span></li>
-              <li><span class="icon icon-amber">✔</span> <span><strong>10 Câmeras Industriais PTZ:</strong> Monitoramento contínuo das manobras, acoplamentos e descarregamento de grãos.</span></li>
+          <div class="box border-amber">
+            <div class="box-title" style="color: var(--amber);">Requisitos de Operação Ferroviária</div>
+            <ul class="checklist" style="margin-top: 10px;">
+              <li><span class="check-icon amber">✔</span> <span><strong>Extensão de 600 Metros:</strong> Distância superior ao limite de 100m do par trançado de cobre, demandando backbone óptico dedicado.</span></li>
+              <li><span class="check-icon amber">✔</span> <span><strong>Balanças Férreas Dinâmicas:</strong> Pesagem automática de vagões sem interrupção de tráfego, transmitindo pesagem ao ERP.</span></li>
+              <li><span class="check-icon amber">✔</span> <span><strong>10 Câmeras Industriais PTZ:</strong> Monitoramento contínuo de desengates, trilhos e carregamento de vagões.</span></li>
             </ul>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">🛠️ Correção e Saneamento Implementados</div>
-            <div class="card-desc">
-              <p>Eliminação completa de falhas de conectividade identificadas na auditoria:</p>
-              <ul class="feature-list" style="margin-top: 10px;">
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Saneamento de APIPA:</strong> Roteador reconfigurado para servir o pool DHCP <code class="code-mono">10.100.16.0/21</code>, concedendo IPs automáticos às 10 câmeras.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Imunidade Eletromagnética:</strong> O cabeamento subterrâneo em fibra óptica dielétrica elimina interferências de motores elétricos de tração das locomotivas.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Alimentação PoE Longa Distância:</strong> Injetores PoE industriais alimentando câmeras em postes metálicos ao longo do trilho.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title" style="color: var(--emerald);">Saneamento e Conectividade Imune</div>
+            <div class="box-desc">
+              <p>Eliminação de falhas de DHCP e blindagem contra interferências:</p>
+              <ul class="checklist" style="margin-top: 10px;">
+                <li><span class="check-icon green">✔</span> <span><strong>Correção de APIPA:</strong> Pool DHCP ativado na VLAN 210 (<code class="code">10.100.16.0/21</code>), concedendo IPs válidos a todas as 10 câmeras.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Imunidade Eletromagnética:</strong> O cabeamento de fibra óptica subterrâneo em duto PEAD não sofre interferência de motores elétricos.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Injetores PoE Industriais:</strong> Alimentação das câmeras diretamente pelos postes metálicos ao longo da ferrovia.</span></li>
               </ul>
             </div>
           </div>
@@ -1079,56 +1053,56 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 9: INSPETORIA & CCO ================= -->
-    <section class="slide" data-slide="9" data-notes="O Prédio da Inspetoria e CCO no Berço 098 é o centro nevrálgico das operações marítimas. Ele atende 8 consoles de operação simultânea para despacho de navios, 1 mesa de suporte na sala de equipamentos, 2 postos na sala de automação de guindastes, 2 câmeras internas, 8 câmeras externas com alcance marítimo e controle de acesso biométrico. Migramos o setor para o bloco 10.100.32.0/21 com pools dedicados para dados, voz e vídeo.">
+    <section class="slide" data-slide="9" data-notes="O Prédio da Inspetoria e CCO no Berço 098 é o centro de comando das operações portuárias. Ele conta com 8 mesas de consoles duplos com telefonia IP, 1 mesa na sala de equipamentos, 2 postos na sala de automação de guindastes (shiploaders), 2 câmeras internas, 8 câmeras externas portuárias cobrindo os cabeços de atracação e controle de acesso. Migramos o setor para o bloco 10.100.32.0/21 com pools DHCP isolados para dados, voz e vídeo.">
       <div class="slide-header">
-        <div class="slide-category">Setor 4 &bull; Operação Marítima</div>
+        <span class="slide-tag">Setor 4 &bull; Operação Marítima</span>
         <h2 class="slide-title">Inspetoria & CCO Berço 098: Controle do Píer</h2>
-        <p class="slide-subtitle">Centro de Controle Operacional para atracação, carregamento de navios e supervisório</p>
+        <p class="slide-subtitle">Centro de Controle Operacional para atracação, esteiras de carregamento e supervisório</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-cyan">
-            <div class="card-title">⚓ Estrutura do Berço 098 do Píer</div>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li><span class="icon icon-cyan">✔</span> <span><strong>8 Consoles de Operação CCO:</strong> Estações duplas com monitores múltiplos e telefonia IP para despacho marítimo.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Sala de Automação (2 Postos):</strong> Controle de esteiras transportadoras e braços de carregamento tipo <em>Shiploader</em>.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>Sala de Equipamentos:</strong> Mesa dedicada para o engenheiro de telecomunicações e manutenção de campo.</span></li>
-              <li><span class="icon icon-cyan">✔</span> <span><strong>CFTV Marítimo (10 Câmeras):</strong> 2 internas no CCO e 8 externas cobrindo cabeços de amarração, esteiras e passadiço do píer.</span></li>
+          <div class="box border-blue">
+            <div class="box-title">Instalações do Berço 098 do Píer</div>
+            <ul class="checklist" style="margin-top: 10px;">
+              <li><span class="check-icon blue">✔</span> <span><strong>8 Consoles CCO:</strong> Estações duplas com múltiplos monitores e telefonia IP para despacho marítimo em tempo real.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Sala de Automação (2 Postos):</strong> Supervisão de esteiras de transporte e braços carregadores (Shiploaders).</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>Sala de Equipamentos:</strong> Posto de manutenção de campo e monitoramento de ativos.</span></li>
+              <li><span class="check-icon blue">✔</span> <span><strong>CFTV Marítimo:</strong> 2 câmeras internas no CCO e 8 externas cobrindo o cais e cabeços de amarração.</span></li>
             </ul>
           </div>
 
-          <div class="card highlight-violet">
-            <div class="card-title">🌐 Arquitetura de Rede Alinhada (10.100.32.0/21)</div>
-            <div class="card-desc">
-              <p>Topologia em estrela com Switch Gigabit Gerenciável e pools DHCP dedicados:</p>
-              <table class="slide-table" style="margin-top: 10px;">
+          <div class="box border-navy">
+            <div class="box-title">Sub-redes e Serviços Alinhados (10.100.32.0/21)</div>
+            <div class="box-desc">
+              <p>Topologia em estrela com Switch Gigabit Gerenciável e pools dedicados:</p>
+              <table class="table-clean" style="margin-top: 10px;">
                 <thead>
                   <tr>
                     <th>Pool DHCP</th>
-                    <th>Sub-rede</th>
-                    <th>Dispositivos</th>
+                    <th>Sub-rede IPv4</th>
+                    <th>Dispositivos Atendidos</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><code>POOL_DADOS</code></td>
-                    <td><code class="code-mono">10.100.32.0/24</code></td>
+                    <td><code class="code">10.100.32.0/24</code></td>
                     <td>8 Consoles CCO e Automação</td>
                   </tr>
                   <tr>
                     <td><code>POOL_CFTV</code></td>
-                    <td><code class="code-mono">10.100.33.0/24</code></td>
-                    <td>10 Câmeras HD Marítimas</td>
+                    <td><code class="code">10.100.33.0/24</code></td>
+                    <td>10 Câmeras HD do Cais</td>
                   </tr>
                   <tr>
                     <td><code>POOL_VOZ</code></td>
-                    <td><code class="code-mono">10.100.34.0/24</code></td>
-                    <td>Telefonia IP dos Operadores</td>
+                    <td><code class="code">10.100.34.0/24</code></td>
+                    <td>Telefonia IP dos Despachantes</td>
                   </tr>
                   <tr>
                     <td><code>POOL_WIFI</code></td>
-                    <td><code class="code-mono">10.100.36.0/24</code></td>
-                    <td>Tablets e Coletores de Cais</td>
+                    <td><code class="code">10.100.36.0/24</code></td>
+                    <td>Tablets e Coletores Portuários</td>
                   </tr>
                 </tbody>
               </table>
@@ -1139,32 +1113,32 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 10: SILO DE GRÃOS ================= -->
-    <section class="slide" data-slide="10" data-notes="O Silo de Grãos possui uma geometria circular singular: 25 metros de raio e 30 metros de altura central. Requisitos: controle de acesso na entrada, 4 câmeras internas, 1 externa e conectividade para sensores IoT industriais de temperatura, gases e nível de biomassa. Corrigimos o switch local para SW-SILO-01, eliminamos anomalias de APIPA e alocamos a rede 10.100.24.0/22 com gateway seguro para integração SCADA.">
+    <section class="slide" data-slide="10" data-notes="O Silo de Grãos tem estrutura circular com 25 metros de raio e 30 metros de altura central. Requisitos: controle de acesso na entrada, 4 câmeras internas, 1 externa e conectividade para sensores industriais IoT de gases e temperatura para prevenir focos de combustão espontânea de grãos. Configuramos o switch industrial SW-SILO-01, eliminamos anomalias de APIPA e integramos a sub-rede 10.100.24.0/22 com o Datacenter central.">
       <div class="slide-header">
-        <div class="slide-category">Setor 5 &bull; Armazenagem de Granéis</div>
+        <span class="slide-tag">Setor 5 &bull; Armazenagem de Granéis Sólidos</span>
         <h2 class="slide-title">Silo de Grãos: Sensores IoT & Estrutura Circular</h2>
-        <p class="slide-subtitle">Arquitetura de conectividade para estrutura vertical com 25m de raio e 30m de altura</p>
+        <p class="slide-subtitle">Arquitetura de rede para estrutura vertical com 25m de raio e 30m de altura central</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-amber">
-            <div class="card-title">🌾 Especificações Físicas & IoT Industrial</div>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li><span class="icon icon-amber">✔</span> <span><strong>Geometria Circular (R=25m, H=30m):</strong> Posicionamento estratégico de eletrocalhas verticais e horizontais em anel concêntrico.</span></li>
-              <li><span class="icon icon-amber">✔</span> <span><strong>Sensores de Biomassa (IoT):</strong> Monitoramento termométrico para prevenção de focos de autoignição de grãos e emissão de gases (CO/CH4).</span></li>
-              <li><span class="icon icon-amber">✔</span> <span><strong>CFTV do Silo:</strong> 4 câmeras internas no domo e fosso e 1 câmera externa com foco na moega de entrada de caminhões.</span></li>
-              <li><span class="icon icon-amber">✔</span> <span><strong>Controle de Acesso:</strong> Portão e eclusa protegidos com fechadura magnética e leitor de cartões.</span></li>
+          <div class="box border-amber">
+            <div class="box-title" style="color: var(--amber);">Geometria Circular & Sensores IoT</div>
+            <ul class="checklist" style="margin-top: 10px;">
+              <li><span class="check-icon amber">✔</span> <span><strong>Estrutura Circular (R=25m, H=30m):</strong> Distribuição de eletrocalhas metálicas seladas em anéis concêntricos horizontais e verticais.</span></li>
+              <li><span class="check-icon amber">✔</span> <span><strong>Sensores Industriais IoT:</strong> Monitoramento de gases (CO/CH4) e termometria contínua para prevenir combustão espontânea.</span></li>
+              <li><span class="check-icon amber">✔</span> <span><strong>CFTV do Silo:</strong> 4 câmeras internas protegidas contra poeira e 1 câmera externa cobrindo a moega de entrada de caminhões.</span></li>
+              <li><span class="check-icon amber">✔</span> <span><strong>Controle de Acesso:</strong> Fechadura eletromecânica na eclusa de segurança.</span></li>
             </ul>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">🛡️ Migração para Bloco Seguro (10.100.24.0/22)</div>
-            <div class="card-desc">
-              <p>Isolamento da rede operacional de sensores do tráfego corporativo:</p>
-              <ul class="feature-list" style="margin-top: 10px;">
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Switch Industrial SW-SILO-01:</strong> Chassi metálico sem ventoinhas (Fanless) com certificação contra pó condutivo.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Gateway IoT:</strong> Endereço <code class="code-mono">10.100.24.1</code> concentrando os dados dos sensores e enviando ao NMS do Datacenter.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Segurança Operacional:</strong> Redundância de links ópticos para o Core do Prédio Administrativo.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title" style="color: var(--emerald);">Isolamento e Segurança (10.100.24.0/22)</div>
+            <div class="box-desc">
+              <p>Segurança operacional e integração com sistema SCADA:</p>
+              <ul class="checklist" style="margin-top: 10px;">
+                <li><span class="check-icon green">✔</span> <span><strong>Switch Industrial SW-SILO-01:</strong> Chassi metálico sem ventoinhas (Fanless) com proteção contra poeira condutiva de grãos.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Gateway IoT (<code class="code">10.100.24.1</code>):</strong> Concentra os dados dos sensores e encaminha via fibra para o servidor NMS do Datacenter.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Saneamento de APIPA:</strong> Todos os ativos com endereçamento estático confiável, eliminando perdas de pacotes.</span></li>
               </ul>
             </div>
           </div>
@@ -1173,75 +1147,73 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 11: TOPOLOGIA FÍSICA & AS-BUILT ================= -->
-    <section class="slide" data-slide="11" data-notes="Para atender aos Requisitos 4 e 5 do edital (As-built e topologia física), apresentamos o diagrama estrutural do campus. Adotamos a topologia em Estrela Hierárquica Estendida. O Datacenter do Prédio Administrativo é o ponto focal. De lá, saem feixes de cabos de fibra óptica monomodo subterrâneos (cabos ópticos autossustentados ou em dutos PEAD) interligando diretamente os 4 setores periféricos. Distâncias de até 1.200 metros são cobertas com latência inferior a 1 milissegundo.">
+    <section class="slide" data-slide="11" data-notes="Para atender aos Requisitos 4 e 5 do edital (As-built e topologia física), apresentamos o diagrama do campus. A arquitetura adotada é a Estrela Hierárquica Estendida. O Datacenter do Prédio Administrativo é o ponto central. De lá, saem cabos subterrâneos de fibra óptica monomodo (SMF OS2) em eletrodutos PEAD de 2 polegadas, interligando a Portaria (450m), o Silo (850m), a Pera (600m) e a Inspetoria (1.200m).">
       <div class="slide-header">
-        <div class="slide-category">Requisitos 4 e 5 &bull; Cabeamento Estruturado</div>
+        <span class="slide-tag">Requisitos 4 e 5 &bull; Cabeamento Estruturado</span>
         <h2 class="slide-title">Topologia Física & Backbone Óptico de Campus</h2>
         <p class="slide-subtitle">Arquitetura em Estrela Hierárquica Estendida com enlaces em Fibra Monomodo (SMF OS2)</p>
       </div>
       <div class="slide-body">
         <div class="grid-2" style="height: 100%;">
-          <div class="card highlight-cyan" style="display: flex; flex-direction: column;">
-            <div class="card-title">🗺️ Diagrama Estrutural do Campus (As-Built)</div>
-            <div class="svg-container" style="flex: 1; margin-top: 8px;">
-              <svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
-                <!-- Grid background subtle -->
-                <defs>
-                  <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.4"/>
-                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
-                  </radialGradient>
-                </defs>
-                <circle cx="250" cy="160" r="85" fill="url(#hubGlow)"/>
+          <div class="box border-navy" style="display: flex; flex-direction: column;">
+            <div class="box-title">Diagrama Estrutural do Campus (As-Built)</div>
+            <div class="svg-wrapper" style="flex: 1; margin-top: 6px;">
+              <svg viewBox="0 0 500 310" xmlns="http://www.w3.org/2000/svg">
+                <!-- Links em linha sólida cinza escura -->
+                <line x1="250" y1="155" x2="80" y2="65" stroke="#2563eb" stroke-width="2.5"/>
+                <line x1="250" y1="155" x2="420" y2="65" stroke="#15803d" stroke-width="2.5"/>
+                <line x1="250" y1="155" x2="80" y2="245" stroke="#b45309" stroke-width="2.5"/>
+                <line x1="250" y1="155" x2="420" y2="245" stroke="#1e3a8a" stroke-width="2.5"/>
 
-                <!-- Fiber links lines -->
-                <line x1="250" y1="160" x2="80" y2="70" stroke="#06b6d4" stroke-width="2.5" stroke-dasharray="4,3"/>
-                <line x1="250" y1="160" x2="420" y2="70" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4,3"/>
-                <line x1="250" y1="160" x2="80" y2="250" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4,3"/>
-                <line x1="250" y1="160" x2="420" y2="250" stroke="#8b5cf6" stroke-width="2.5" stroke-dasharray="4,3"/>
+                <!-- Distancias das Fibras -->
+                <rect x="110" y="95" width="75" height="18" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="147" y="108" fill="#475569" font-size="9" font-family="monospace" text-anchor="middle">Fibra 450m</text>
 
-                <!-- Fiber Distance Labels -->
-                <text x="140" y="100" fill="#94a3b8" font-size="10" font-family="monospace">Fibra 450m</text>
-                <text x="320" y="100" fill="#94a3b8" font-size="10" font-family="monospace">Fibra 850m</text>
-                <text x="140" y="225" fill="#94a3b8" font-size="10" font-family="monospace">Fibra 600m</text>
-                <text x="310" y="225" fill="#94a3b8" font-size="10" font-family="monospace">Fibra 1.200m</text>
+                <rect x="315" y="95" width="75" height="18" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="352" y="108" fill="#475569" font-size="9" font-family="monospace" text-anchor="middle">Fibra 850m</text>
 
-                <!-- Central Hub: Prédio ADM & Datacenter -->
-                <rect x="190" y="125" width="120" height="70" rx="8" fill="#0f172a" stroke="#06b6d4" stroke-width="2.5"/>
-                <text x="250" y="152" fill="#f8fafc" font-size="12" font-weight="bold" font-family="sans-serif" text-anchor="middle">DATACENTER CORE</text>
-                <text x="250" y="170" fill="#38bdf8" font-size="10" font-family="sans-serif" text-anchor="middle">Prédio Administrativo</text>
-                <text x="250" y="184" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.20.0.0/16</text>
+                <rect x="110" y="210" width="75" height="18" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="147" y="223" fill="#475569" font-size="9" font-family="monospace" text-anchor="middle">Fibra 600m</text>
 
-                <!-- Node: Portaria TP -->
-                <rect x="25" y="45" width="110" height="50" rx="6" fill="#0f172a" stroke="#06b6d4" stroke-width="1.8"/>
-                <text x="80" y="68" fill="#f8fafc" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">PORTARIA TP</text>
-                <text x="80" y="84" fill="#94a3b8" font-size="9" font-family="monospace" text-anchor="middle">10.100.28.0/23</text>
+                <rect x="315" y="210" width="85" height="18" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="357" y="223" fill="#475569" font-size="9" font-family="monospace" text-anchor="middle">Fibra 1.200m</text>
 
-                <!-- Node: Silo de Grãos -->
-                <rect x="365" y="45" width="110" height="50" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.8"/>
-                <text x="420" y="68" fill="#f8fafc" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">SILO DE GRÃOS</text>
-                <text x="420" y="84" fill="#94a3b8" font-size="9" font-family="monospace" text-anchor="middle">10.100.24.0/22</text>
+                <!-- Central: Datacenter Core -->
+                <rect x="185" y="120" width="130" height="70" rx="6" fill="#ffffff" stroke="#1e3a8a" stroke-width="2"/>
+                <text x="250" y="145" fill="#1e3a8a" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">DATACENTER CORE</text>
+                <text x="250" y="162" fill="#334155" font-size="10" font-family="sans-serif" text-anchor="middle">Prédio Administrativo</text>
+                <text x="250" y="177" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.20.0.0/16</text>
 
-                <!-- Node: Pera Ferroviária -->
-                <rect x="25" y="225" width="110" height="50" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1.8"/>
-                <text x="80" y="248" fill="#f8fafc" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">PERA FÉRREA</text>
-                <text x="80" y="264" fill="#94a3b8" font-size="9" font-family="monospace" text-anchor="middle">10.100.16.0/21</text>
+                <!-- Portaria TP -->
+                <rect x="25" y="40" width="110" height="50" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.8"/>
+                <text x="80" y="62" fill="#0f172a" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">PORTARIA TP</text>
+                <text x="80" y="78" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.100.28.0/23</text>
 
-                <!-- Node: Inspetoria / CCO -->
-                <rect x="365" y="225" width="110" height="50" rx="6" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.8"/>
-                <text x="420" y="248" fill="#f8fafc" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">INSPETORIA / CCO</text>
-                <text x="420" y="264" fill="#94a3b8" font-size="9" font-family="monospace" text-anchor="middle">10.100.32.0/21</text>
+                <!-- Silo -->
+                <rect x="365" y="40" width="110" height="50" rx="6" fill="#ffffff" stroke="#15803d" stroke-width="1.8"/>
+                <text x="420" y="62" fill="#0f172a" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">SILO DE GRÃOS</text>
+                <text x="420" y="78" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.100.24.0/22</text>
+
+                <!-- Pera -->
+                <rect x="25" y="220" width="110" height="50" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.8"/>
+                <text x="80" y="242" fill="#0f172a" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">PERA FÉRREA</text>
+                <text x="80" y="258" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.100.16.0/21</text>
+
+                <!-- Inspetoria / CCO -->
+                <rect x="365" y="220" width="110" height="50" rx="6" fill="#ffffff" stroke="#1e3a8a" stroke-width="1.8"/>
+                <text x="420" y="242" fill="#0f172a" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">INSPETORIA / CCO</text>
+                <text x="420" y="258" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">10.100.32.0/21</text>
               </svg>
             </div>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">🔗 Diretrizes do Cabeamento Estruturado</div>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li><span class="icon icon-emerald">✔</span> <span><strong>Backbone de Campus:</strong> Cabos ópticos subterrâneos Monomodo (SMF OS2 9/125µm) passados em dutos de polietileno (PEAD) de 2 polegadas com caixas de passagem a cada 80 metros.</span></li>
-              <li><span class="icon icon-emerald">✔</span> <span><strong>Cabeamento Horizontal Interno:</strong> Cabos de par trançado U/UTP Categoria 6 (Cat6) homologados para 1Gbps / 10Gbps até 55m, com capa LSZH (baixa emissão de fumaça e livre de halogênios).</span></li>
-              <li><span class="icon icon-emerald">✔</span> <span><strong>Topologia Física:</strong> Estrela hierárquica estendida em conformidade estrita com a norma ANSI/TIA-568-D.</span></li>
-              <li><span class="icon icon-emerald">✔</span> <span><strong>Identificação & As-Built:</strong> Todas as tomadas RJ45, patch panels e cordões ópticos numerados de acordo com a norma TIA-606-C.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title">Diretrizes de Cabeamento Estruturado</div>
+            <ul class="checklist" style="margin-top: 10px;">
+              <li><span class="check-icon green">✔</span> <span><strong>Backbone Óptico Monomodo:</strong> Cabos SMF OS2 (9/125µm) de 12 fibras, passados em eletrodutos PEAD subterrâneos com caixas de passagem inspecionáveis a cada 80m.</span></li>
+              <li><span class="check-icon green">✔</span> <span><strong>Cabeamento Horizontal Cat6:</strong> Par trançado de 4 pares 100% cobre com capa LSZH (não inflamável e sem halogênios) para até 1Gbps / 10Gbps.</span></li>
+              <li><span class="check-icon green">✔</span> <span><strong>Topologia em Estrela Hierárquica:</strong> Atende à norma ANSI/TIA-568-D, garantindo que o isolamento de um setor não afete os demais.</span></li>
+              <li><span class="check-icon green">✔</span> <span><strong>Identificação e Etiquetagem:</strong> Portas, patch panels e DIOs identificados conforme a norma TIA-606-C.</span></li>
             </ul>
           </div>
         </div>
@@ -1249,48 +1221,49 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 12: O LABORATÓRIO MASTER UNIFICADO ================= -->
-    <section class="slide" data-slide="12" data-notes="Para atender ao Requisito 6 de topologia lógica e à exigência de 'centralizar todos os produtos em um só sem gambiarras', criamos o Terminal-Portuario-Geral.pkt na raiz do projeto. Ele integra todos os 104 dispositivos e 84 enlaces dos cinco setores em uma única simulação ativa. Removemos erros de Physical Workspace, sincronizamos todos os ponteiros de memória de cabos e garantimos que todo o tráfego converse harmoniosamente com zero conflito de IP.">
+    <section class="slide" data-slide="12" data-notes="Para atender ao Requisito 6 de topologia lógica e à exigência de centralizar todos os produtos em um só sem gambiarras, geramos o Terminal-Portuario-Geral.pkt na raiz do projeto. Ele integra 104 dispositivos e 84 enlaces ativos. Sincronizamos a árvore de nós físicos do Packet Tracer, corrigimos os ponteiros de memória de cabos e garantimos que todo o ambiente se comunique perfeitamente, sem erros na abertura.">
       <div class="slide-header">
-        <div class="slide-category">Requisito 6 &bull; Centralização Master</div>
+        <span class="slide-tag">Requisito 6 &bull; Centralização & Homologação</span>
         <h2 class="slide-title">O Laboratório Mestre Unificado (Terminal-Portuario-Geral.pkt)</h2>
         <p class="slide-subtitle">Consolidação de 100% dos produtos setoriais em um único ambiente nativo do Packet Tracer 9.0</p>
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card highlight-cyan">
-            <div class="card-title">📦 Métricas Oficiais do Laboratório Mestre</div>
-            <div class="grid-2" style="margin-top: 12px; gap: 12px;">
-              <div class="stat-box">
-                <div class="stat-num" style="color: var(--cyan);">104</div>
-                <div class="stat-label">Dispositivos Totais</div>
+          <div class="box border-navy">
+            <div class="box-title">Métricas Oficiais do Laboratório Master</div>
+            <div class="grid-2" style="margin-top: 12px; gap: 10px;">
+              <div class="stat-card">
+                <div class="stat-val" style="color: var(--navy);">104</div>
+                <div class="stat-title">Dispositivos Totais</div>
               </div>
-              <div class="stat-box">
-                <div class="stat-num" style="color: var(--emerald);">84</div>
-                <div class="stat-label">Enlaces Ativos</div>
+              <div class="stat-card">
+                <div class="stat-val" style="color: var(--emerald);">84</div>
+                <div class="stat-title">Enlaces Ativos</div>
               </div>
-              <div class="stat-box">
-                <div class="stat-num" style="color: var(--violet); font-size: 1.6rem;">487 KB</div>
-                <div class="stat-label">Tamanho do Arquivo</div>
+              <div class="stat-card">
+                <div class="stat-val" style="font-size: 1.5rem; color: var(--blue);">487 KB</div>
+                <div class="stat-title">Tamanho do Arquivo</div>
               </div>
-              <div class="stat-box">
-                <div class="stat-num" style="color: var(--amber); font-size: 1.6rem;">9.0.1</div>
-                <div class="stat-label">Cisco Packet Tracer</div>
+              <div class="stat-card">
+                <div class="stat-val" style="font-size: 1.5rem; color: var(--text-main);">9.0.1</div>
+                <div class="stat-title">Packet Tracer</div>
               </div>
             </div>
 
-            <div style="margin-top: 16px; font-size: 0.82rem; color: var(--text-muted); font-family: var(--font-mono); background: rgba(0,0,0,0.35); padding: 10px; border-radius: 8px;">
-              <strong>SHA-256:</strong> 2f91cd430ea14f6086e0f116dc65942a5b018cbcfebe8d5bde1cd7d5615e3669
+            <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-sub); font-family: var(--font-mono); background: #ffffff; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
+              <strong>SHA-256 de Homologação:</strong><br>
+              2f91cd430ea14f6086e0f116dc65942a5b018cbcfebe8d5bde1cd7d5615e3669
             </div>
           </div>
 
-          <div class="card highlight-emerald">
-            <div class="card-title">✅ Homologação Estrutural de Engenharia</div>
-            <div class="card-desc">
-              <p>O arquivo foi submetido à bateria completa de verificações estruturais automatizadas:</p>
-              <ul class="feature-list" style="margin-top: 10px;">
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Physical Workspace OK:</strong> Árvore física 100% sincronizada com 104 nós folhas correspondendo aos 104 dispositivos lógicos. Zero erros ao abrir.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Enlaces Sincronizados:</strong> Todos os 84 enlaces mapeados com endereços de memória de porta (<code class="code-mono">MEM_ADDR</code>) consistentes.</span></li>
-                <li><span class="icon icon-emerald">✔</span> <span><strong>Roteamento Inter-Setorial:</strong> Comunicação plena de qualquer terminal de console do CCO com o Core Datacenter e servidores de aplicação.</span></li>
+          <div class="box border-emerald">
+            <div class="box-title" style="color: var(--emerald);">Validação Estrutural e Coerência</div>
+            <div class="box-desc">
+              <p>O arquivo mestre foi submetido aos validadores estruturais e de integridade do Cisco Packet Tracer:</p>
+              <ul class="checklist" style="margin-top: 10px;">
+                <li><span class="check-icon green">✔</span> <span><strong>Physical Workspace OK:</strong> Árvore de nós físicos 100% sincronizada com 104 nós correspondendo aos 104 dispositivos lógicos. Zero erros ao carregar.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Enlaces de Memória Reconciliados:</strong> Todos os 84 links com ponteiros <code class="code">MEM_ADDR</code> consistentes.</span></li>
+                <li><span class="check-icon green">✔</span> <span><strong>Interconectividade Total:</strong> Consoles do CCO pingam com sucesso os servidores do Datacenter e o gateway de saída.</span></li>
               </ul>
             </div>
           </div>
@@ -1299,15 +1272,15 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 13: ORÇAMENTO (BOM) ================= -->
-    <section class="slide" data-slide="13" data-notes="No Requisito 3 do edital, apresentamos o Orçamento por Ordem de Grandeza (Bill of Materials - BOM). Estruturamos os custos em Ativos de Rede (switches Catalyst, roteadores Cisco ISR, APs Wi-Fi 6), Passivos e Cabeamento (fibra monomodo, patch panels, cordões ópticos, racks selados IP66) e Infraestrutura Complementar (no-breaks com redundância e gerador). O investimento estimado em telecomunicações é de aproximadamente R$ 1,2 milhão, plenamente aderente aos R$ 2,5 bilhões globais do complexo.">
+    <section class="slide" data-slide="13" data-notes="No Requisito 3, apresentamos o Orçamento por Ordem de Grandeza (BOM - Bill of Materials). Agrupamos os custos em: Ativos de Rede (switches Catalyst, roteadores Cisco ISR, APs Wi-Fi 6), Passivos e Fibras (fibra monomodo, patch panels, cordões, racks herméticos) e Infraestrutura de Apoio (no-breaks com redundância N+1). O investimento estimado em telecomunicações é de aproximadamente R$ 1,28 milhão, representando menos de 0,1% do orçamento global do porto de 2,5 bilhões.">
       <div class="slide-header">
-        <div class="slide-category">Requisito 3 &bull; Orçamento por Ordem de Grandeza</div>
+        <span class="slide-tag">Requisito 3 &bull; Orçamento por Ordem de Grandeza</span>
         <h2 class="slide-title">Lista de Materiais (BOM) & Investimento Estimado</h2>
-        <p class="slide-subtitle">Dimensionamento de custos em ativos, passivos e infraestrutura física de telecomunicações</p>
+        <p class="slide-subtitle">Dimensionamento orçamentário de ativos, passivos e infraestrutura física de telecomunicações</p>
       </div>
       <div class="slide-body">
-        <div class="card" style="margin-bottom: 16px;">
-          <table class="slide-table">
+        <div class="box" style="margin-bottom: 12px; padding: 0; overflow: hidden;">
+          <table class="table-clean" style="margin: 0; border: none;">
             <thead>
               <tr>
                 <th>Categoria</th>
@@ -1322,21 +1295,21 @@ def generate_presentation():
                 <td><strong>Roteadores de Borda</strong></td>
                 <td>Cisco ISR 4331 / 1941 (Gigabit WAN/LAN, IP Base)</td>
                 <td>3 un</td>
-                <td>Borda do Campus, Datacenter e Gateway de Trânsito</td>
+                <td>Borda de Campus, Datacenter e Trânsito</td>
                 <td>R$ 68.000,00</td>
               </tr>
               <tr>
                 <td><strong>Switches Core L3</strong></td>
                 <td>Cisco Catalyst 3560 / 3650 (24x GbE PoE+ / 4x 10G SFP+)</td>
                 <td>2 un</td>
-                <td>Distribuição e Roteamento Inter-VLANs no Datacenter</td>
+                <td>Roteamento Inter-VLANs no Datacenter</td>
                 <td>R$ 95.000,00</td>
               </tr>
               <tr>
                 <td><strong>Switches de Acesso</strong></td>
-                <td>Cisco Catalyst 2960-X / 2960-Plus (24/48 portas PoE+)</td>
+                <td>Cisco Catalyst 2960-X / Plus (24/48 portas PoE+)</td>
                 <td>12 un</td>
-                <td>Distribuição em baias, câmeras de CFTV e APs</td>
+                <td>Distribuição em baias, câmeras e APs</td>
                 <td>R$ 144.000,00</td>
               </tr>
               <tr>
@@ -1348,16 +1321,16 @@ def generate_presentation():
               </tr>
               <tr>
                 <td><strong>Access Points Wi-Fi 6</strong></td>
-                <td>Cisco Catalyst 9115AX / Ubiquiti UniFi 6 Pro</td>
+                <td>Cisco Catalyst 9115AX / Corporativo</td>
                 <td>8 un</td>
                 <td>Cobertura corporativa, galpões e portaria</td>
                 <td>R$ 24.000,00</td>
               </tr>
               <tr>
                 <td><strong>Backbone de Fibra</strong></td>
-                <td>Cabo Óptico Monomodo SMF OS2 12FO Dielétrico Geleado</td>
+                <td>Cabo Óptico Monomodo SMF OS2 12FO Dielétrico</td>
                 <td>3.800m</td>
-                <td>Interligação física dos 5 prédios do complexo</td>
+                <td>Interligação dos 5 prédios do complexo</td>
                 <td>R$ 72.200,00</td>
               </tr>
               <tr>
@@ -1367,9 +1340,9 @@ def generate_presentation():
                 <td>Infraestrutura de cabeamento e proteção de energia</td>
                 <td>R$ 180.000,00</td>
               </tr>
-              <tr style="background: rgba(16, 185, 129, 0.1); font-weight: 700; color: var(--text-primary);">
+              <tr style="background: #f8fafc; font-weight: 700;">
                 <td colspan="4"><strong>TOTAL GERAL CONSOLIDADO (Equipamentos, Materiais e Implantação)</strong></td>
-                <td style="color: var(--emerald); font-size: 1rem;"><strong>R$ 1.280.000,00</strong></td>
+                <td style="color: var(--emerald); font-size: 0.95rem;"><strong>R$ 1.280.000,00</strong></td>
               </tr>
             </tbody>
           </table>
@@ -1378,96 +1351,97 @@ def generate_presentation():
     </section>
 
     <!-- ================= SLIDE 14: CONCLUSÃO & HOMOLOGAÇÃO ================= -->
-    <section class="slide" data-slide="14" data-notes="Para encerrar a apresentação, ressaltamos que todos os 6 objetivos de entrega do edital foram plenamente atingidos. O projeto não apenas documentou os requisitos e orçamentos, mas corrigiu falhas estruturais dos arquivos anteriores, entregando um ecossistema pronto, seguro e testado. O Complexo Portuário de São Luís agora dispõe de uma arquitetura de classe internacional, pronta para sustentar a expansão logística do Maranhão. Abrimos agora para perguntas do professor e dos colegas. Obrigado!">
-      <div class="slide-header" style="text-align: center; margin-top: auto; margin-bottom: 20px;">
-        <span class="pill pill-emerald" style="font-size: 0.85rem; padding: 6px 16px; margin-bottom: 14px;">Conclusão & Entrega Final Homologada</span>
-        <h2 class="slide-title" style="font-size: 2.8rem; letter-spacing: -0.02em;">
-          Excelência em Engenharia & Conectividade Portuária
+    <section class="slide" data-slide="14" data-notes="Para finalizar, destacamos que todos os 6 requisitos do Problema 1 foram rigorosamente cumpridos. Corrigimos todas as vulnerabilidades lógicas dos projetos setoriais, garantimos aderência às normas técnicas e entregamos o laboratório master pronto para simulações ao vivo no Packet Tracer. Agradecemos a oportunidade e abrimos agora para considerações da banca examinadora e do professor Arlley Costa.">
+      <div class="slide-header" style="text-align: center; border-bottom: none; margin-top: auto; margin-bottom: 20px;">
+        <span class="badge badge-green" style="font-size: 0.8rem; padding: 4px 12px; margin-bottom: 12px;">Conclusão & Entrega Final Homologada</span>
+        <h2 class="slide-title" style="font-size: 2.7rem; color: var(--navy);">
+          Conclusão & Homologação de Engenharia
         </h2>
-        <p class="slide-subtitle" style="font-size: 1.15rem; color: var(--text-secondary);">
-          Todos os 6 requisitos do Problema 1 atendidos rigorosamente sem gambiarras e com validação técnica
+        <p class="slide-subtitle" style="font-size: 1.15rem; color: var(--text-sub);">
+          Todos os 6 requisitos do Problema 1 atendidos com rigor técnico, solidez e validação completa
         </p>
       </div>
 
       <div class="slide-body" style="margin-bottom: auto;">
-        <div class="grid-3" style="max-width: 1100px; margin: 16px auto 28px; width: 100%;">
-          <div class="card highlight-emerald" style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">🏆</div>
-            <div class="card-title" style="justify-content: center;">Score Global: 98 / 100</div>
-            <div class="card-desc">Aprovado e Homologado pela Auditoria Independente de Engenharia</div>
+        <div class="grid-3" style="max-width: 1040px; margin: 16px auto 28px; width: 100%;">
+          <div class="stat-card" style="border-top: 4px solid var(--emerald);">
+            <div class="stat-val" style="color: var(--emerald);">98 / 100</div>
+            <div class="stat-title" style="margin-top: 4px;">Score de Homologação</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Aprovado na auditoria técnica independente</p>
           </div>
-          <div class="card highlight-cyan" style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">🌐</div>
-            <div class="card-title" style="justify-content: center;">Laboratório Master .PKT</div>
-            <div class="card-desc">104 dispositivos unificados com integridade lógica e física 100% íntegra</div>
+          <div class="stat-card" style="border-top: 4px solid var(--navy);">
+            <div class="stat-val" style="color: var(--navy);">104 Ativos</div>
+            <div class="stat-title" style="margin-top: 4px;">Laboratório Master .PKT</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Consolidação dos 5 setores sem erros</p>
           </div>
-          <div class="card highlight-violet" style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">📑</div>
-            <div class="card-title" style="justify-content: center;">Relatório HTML Completo</div>
-            <div class="card-desc">Documentação viva de auditoria com inventário criptográfico de SHA-256</div>
+          <div class="stat-card" style="border-top: 4px solid var(--blue);">
+            <div class="stat-val" style="color: var(--blue);">Relatório HTML</div>
+            <div class="stat-title" style="margin-top: 4px;">Documentação Viva</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Auditoria completa com hashes SHA-256</p>
           </div>
         </div>
 
-        <div style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-top: 10px;">
+        <div style="text-align: center; color: var(--text-sub); font-size: 1.05rem; margin-top: 10px;">
           Agradecemos a atenção do <strong>Prof. Arlley Costa</strong> e de toda a turma da <strong>UNDB 4.0</strong>.<br>
-          <span style="color: var(--cyan); font-weight: 600;">Estamos abertos para considerações, testes ao vivo e perguntas da banca!</span>
+          <span style="color: var(--navy); font-weight: 600;">Estamos à disposição para considerações da banca e demonstração prática!</span>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Bottom Interactive Control Navigation Bar -->
-  <footer class="bottom-bar">
-    <div class="controls-group">
-      <button class="ctrl-btn" id="btnPrev" title="Slide Anterior (←)">
+  <!-- Bottom Navigation Bar -->
+  <footer class="bottom-nav">
+    <div class="nav-btn-group">
+      <button class="btn btn-primary" id="btnPrev" title="Slide Anterior (←)">
         <span>◀</span> <span>Anterior</span>
       </button>
-      <div class="slide-counter" id="slideCounter">01 / 14</div>
-      <button class="ctrl-btn" id="btnNext" title="Próximo Slide (→)">
+      <div class="counter" id="slideCounter">01 / 14</div>
+      <button class="btn btn-primary" id="btnNext" title="Próximo Slide (→)">
         <span>Próximo</span> <span>▶</span>
       </button>
     </div>
 
-    <div class="controls-group">
-      <span style="font-size: 0.76rem; color: var(--text-muted); padding: 0 8px;">
-        Use <span class="kbd-tag">←</span> <span class="kbd-tag">→</span> <span class="kbd-tag">Espaço</span> para navegar
+    <div class="nav-btn-group">
+      <span style="font-size: 0.75rem; color: var(--text-muted); padding: 0 6px;">
+        Teclas: <span class="kbd">←</span> <span class="kbd">→</span> <span class="kbd">Espaço</span>
       </span>
-      <button class="ctrl-btn" id="btnFirst" title="Início">⏮</button>
-      <button class="ctrl-btn" id="btnLast" title="Fim">⏭</button>
+      <button class="btn" id="btnFirst" title="Primeiro Slide">⏮</button>
+      <button class="btn" id="btnLast" title="Último Slide">⏭</button>
     </div>
   </footer>
 
-  <!-- Modal: Grid Overview -->
-  <div class="overview-modal" id="overviewModal">
-    <div class="overview-header">
-      <div class="overview-title">Índice Geral dos Slides</div>
-      <button class="ctrl-btn" id="btnCloseOverview">Fechar <span class="kbd-tag">Esc</span></button>
-    </div>
-    <div class="overview-grid" id="overviewGrid">
-      <!-- Generated via JavaScript -->
+  <!-- Modal: Overview Grid -->
+  <div class="modal-backdrop" id="overviewModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">Índice Executivo dos Slides</div>
+        <button class="btn" id="btnCloseOverview">Fechar <span class="kbd">Esc</span></button>
+      </div>
+      <div class="overview-grid" id="overviewGrid">
+        <!-- Inserido dinamicamente via JS -->
+      </div>
     </div>
   </div>
 
-  <!-- Modal: Presenter Notes Drawer -->
-  <aside class="notes-drawer" id="notesDrawer">
-    <div class="notes-header">
-      <div class="notes-title">🎙️ Roteiro do Apresentador</div>
-      <button class="ctrl-btn" id="btnCloseNotes" style="padding: 2px 8px; font-size: 0.75rem;">✕</button>
+  <!-- Modal: Presenter Notes -->
+  <aside class="notes-box" id="notesDrawer">
+    <div class="notes-head">
+      <div class="notes-tag">Roteiro do Apresentador</div>
+      <button class="btn" id="btnCloseNotes" style="padding: 2px 6px; font-size: 0.75rem;">✕</button>
     </div>
-    <div class="notes-content" id="notesContent">
-      <!-- Loaded dynamically based on active slide -->
+    <div class="notes-body" id="notesContent">
+      <!-- Inserido dinamicamente via JS -->
     </div>
   </aside>
 
-  <!-- Presentation Navigation Controller Script -->
+  <!-- Slide Navigation Script -->
   <script>
     (function() {
       const slides = Array.from(document.querySelectorAll('.slide'));
       const totalSlides = slides.length;
       let currentIndex = 0;
 
-      // DOM Elements
       const progressFill = document.getElementById('progressFill');
       const slideCounter = document.getElementById('slideCounter');
       const btnPrev = document.getElementById('btnPrev');
@@ -1484,31 +1458,30 @@ def generate_presentation():
       const btnCloseNotes = document.getElementById('btnCloseNotes');
       const notesContent = document.getElementById('notesContent');
 
-      // Populate Overview Grid
+      // Popular índice
       slides.forEach((slide, idx) => {
         const titleElem = slide.querySelector('.slide-title');
-        const catElem = slide.querySelector('.slide-category');
+        const tagElem = slide.querySelector('.slide-tag');
         const titleText = titleElem ? titleElem.innerText.replace(/\\n/g, ' ') : `Slide ${idx + 1}`;
-        const catText = catElem ? catElem.innerText : '';
+        const tagText = tagElem ? tagElem.innerText : '';
 
-        const card = document.createElement('div');
-        card.className = 'thumb-card' + (idx === 0 ? ' active-thumb' : '');
-        card.innerHTML = `
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb' + (idx === 0 ? ' current' : '');
+        thumb.innerHTML = `
           <div>
-            <div class="thumb-index">SLIDE ${String(idx + 1).padStart(2, '0')}</div>
-            <div class="thumb-title">${titleText}</div>
+            <div class="thumb-num">SLIDE ${String(idx + 1).padStart(2, '0')}</div>
+            <div class="thumb-head">${titleText}</div>
           </div>
-          <div style="font-size: 0.72rem; color: var(--cyan); margin-top: 8px;">${catText}</div>
+          <div style="font-size: 0.7rem; color: var(--navy); margin-top: 6px;">${tagText}</div>
         `;
-        card.addEventListener('click', () => {
+        thumb.addEventListener('click', () => {
           goToSlide(idx);
           toggleOverview(false);
         });
-        overviewGrid.appendChild(card);
+        overviewGrid.appendChild(thumb);
       });
 
       function updateSlideUI() {
-        // Update active class on slides
         slides.forEach((slide, idx) => {
           if (idx === currentIndex) {
             slide.classList.add('active');
@@ -1517,29 +1490,24 @@ def generate_presentation():
           }
         });
 
-        // Update progress bar
-        const progressPercent = ((currentIndex + 1) / totalSlides) * 100;
-        progressFill.style.width = progressPercent + '%';
+        const progress = ((currentIndex + 1) / totalSlides) * 100;
+        progressFill.style.width = progress + '%';
 
-        // Update slide counter
         slideCounter.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
 
-        // Update thumbnail highlight
-        const thumbCards = overviewGrid.querySelectorAll('.thumb-card');
-        thumbCards.forEach((tc, idx) => {
+        const thumbs = overviewGrid.querySelectorAll('.thumb');
+        thumbs.forEach((t, idx) => {
           if (idx === currentIndex) {
-            tc.classList.add('active-thumb');
+            t.classList.add('current');
           } else {
-            tc.classList.remove('active-thumb');
+            t.classList.remove('current');
           }
         });
 
-        // Update speaker notes
-        const currentSlide = slides[currentIndex];
-        const notes = currentSlide.getAttribute('data-notes') || 'Sem notas para este slide.';
+        const curSlide = slides[currentIndex];
+        const notes = curSlide.getAttribute('data-notes') || 'Sem notas para este slide.';
         notesContent.innerHTML = `<p>${notes}</p>`;
 
-        // Control button states
         btnPrev.disabled = (currentIndex === 0);
         btnPrev.style.opacity = (currentIndex === 0) ? '0.4' : '1';
         btnNext.disabled = (currentIndex === totalSlides - 1);
@@ -1554,54 +1522,47 @@ def generate_presentation():
       }
 
       function nextSlide() {
-        if (currentIndex < totalSlides - 1) {
-          goToSlide(currentIndex + 1);
-        }
+        if (currentIndex < totalSlides - 1) goToSlide(currentIndex + 1);
       }
 
       function prevSlide() {
-        if (currentIndex > 0) {
-          goToSlide(currentIndex - 1);
+        if (currentIndex > 0) goToSlide(currentIndex - 1);
+      }
+
+      function toggleOverview(force) {
+        const isShown = overviewModal.classList.contains('open');
+        const shouldShow = (force !== undefined) ? force : !isShown;
+        if (shouldShow) {
+          overviewModal.classList.add('open');
+          btnOverviewToggle.classList.add('active');
+        } else {
+          overviewModal.classList.remove('open');
+          btnOverviewToggle.classList.remove('active');
         }
       }
 
-      function toggleOverview(forceState) {
-        const isShown = overviewModal.classList.contains('show');
-        const shouldShow = (forceState !== undefined) ? forceState : !isShown;
+      function toggleNotes(force) {
+        const isShown = notesDrawer.classList.contains('open');
+        const shouldShow = (force !== undefined) ? force : !isShown;
         if (shouldShow) {
-          overviewModal.classList.add('show');
-          btnOverviewToggle.classList.add('active-btn');
+          notesDrawer.classList.add('open');
+          btnNotesToggle.classList.add('active');
         } else {
-          overviewModal.classList.remove('show');
-          btnOverviewToggle.classList.remove('active-btn');
-        }
-      }
-
-      function toggleNotes(forceState) {
-        const isShown = notesDrawer.classList.contains('show');
-        const shouldShow = (forceState !== undefined) ? forceState : !isShown;
-        if (shouldShow) {
-          notesDrawer.classList.add('show');
-          btnNotesToggle.classList.add('active-btn');
-        } else {
-          notesDrawer.classList.remove('show');
-          btnNotesToggle.classList.remove('active-btn');
+          notesDrawer.classList.remove('open');
+          btnNotesToggle.classList.remove('active');
         }
       }
 
       function toggleFullscreen() {
         if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(err => console.log(err));
-          btnFullscreenToggle.classList.add('active-btn');
+          document.documentElement.requestFullscreen().catch(() => {});
+          btnFullscreenToggle.classList.add('active');
         } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          }
-          btnFullscreenToggle.classList.remove('active-btn');
+          if (document.exitFullscreen) document.exitFullscreen();
+          btnFullscreenToggle.classList.remove('active');
         }
       }
 
-      // Event Listeners
       btnNext.addEventListener('click', nextSlide);
       btnPrev.addEventListener('click', prevSlide);
       btnFirst.addEventListener('click', () => goToSlide(0));
@@ -1615,24 +1576,19 @@ def generate_presentation():
 
       btnFullscreenToggle.addEventListener('click', toggleFullscreen);
 
-      // Keyboard navigation
       window.addEventListener('keydown', (e) => {
-        // Esc closes modal or drawer
         if (e.key === 'Escape') {
-          if (overviewModal.classList.contains('show')) {
+          if (overviewModal.classList.contains('open')) {
             toggleOverview(false);
             return;
           }
-          if (notesDrawer.classList.contains('show')) {
+          if (notesDrawer.classList.contains('open')) {
             toggleNotes(false);
             return;
           }
         }
 
-        // When overview is open, don't trigger arrow navigation
-        if (overviewModal.classList.contains('show')) {
-          return;
-        }
+        if (overviewModal.classList.contains('open')) return;
 
         switch(e.key) {
           case 'ArrowRight':
@@ -1673,7 +1629,6 @@ def generate_presentation():
         }
       });
 
-      // Initial Call
       updateSlideUI();
     })();
   </script>
@@ -1685,7 +1640,7 @@ def generate_presentation():
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"Apresentacao gerada com sucesso em: {out_path} ({len(html_content)} bytes)")
+    print(f"Apresentacao executiva gerada com sucesso em: {out_path} ({len(html_content)} bytes)")
 
 if __name__ == '__main__':
-    generate_presentation()
+    generate_business_presentation()
