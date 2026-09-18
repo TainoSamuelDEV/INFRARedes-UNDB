@@ -21,17 +21,16 @@ O projeto de infraestrutura de redes do Terminal Portuário Ponta da Madeira / I
 
 ---
 
-## 🎯 Guia Rápido de Avaliação para o Professor
+## 🎯 Entregáveis Oficiais do Projeto
 
-Todos os produtos exigidos no edital estão consolidados e prontos para consulta imediata:
+Todos os produtos exigidos no edital estão consolidados e prontos para consulta:
 
 | Artefato de Entrega | Descrição do Documento | Formato / Link Direto |
 | :--- | :--- | :--- |
 | 📊 **Apresentação Executiva Oficial** | **Apresentação em 11 slides widescreen 16:9** contendo contexto portuário, prevenção de demurrage, orçamento geral, topologia estrela centralizada no CPD e as **plantas e diagramas reais de cada dupla**. | [`Projeto-de-Infraestrutura-de-Redes-Apresentacao.pdf`](Projeto-de-Infraestrutura-de-Redes-Apresentacao.pdf) |
 | 🧪 **Laboratório Master Consolidado** | **Arquivo mestre do Cisco Packet Tracer** com todos os 104 ativos interligados, roteamento inter-VLAN validado, superbloco `10.100.0.0/16` sem sobreposições e testes de ping 100% funcionais. | [`Terminal-Portuario-Geral.pkt`](Terminal-Portuario-Geral.pkt) |
-| 🔍 **Relatório de Auditoria Geral** | **Dossiê completo de auditoria técnica** com diagnóstico inicial, identificação das falhas setoriais e o memorial de saneamento aplicado em cada setor. | [`Auditoria-Geral-InfraRedes-UNDB.html`](Auditoria-Geral-InfraRedes-UNDB.html) |
-| 🌐 **Apresentação Interativa HTML** | Versão dinâmica em HTML para exibição interativa em navegador. | [`Apresentacao-Terminal-Portuario-UNDB.html`](Apresentacao-Terminal-Portuario-UNDB.html) |
-| 📦 **Pacote Compactado de Entrega** | Arquivo compactado contendo todos os entregáveis do projeto para download único. | [`ENTREGA-PROJETO-TERMINAL-PORTUARIO-UNDB.zip`](ENTREGA-PROJETO-TERMINAL-PORTUARIO-UNDB.zip) |
+| 📋 **Guia de Avaliação do Professor** | Roteiro prático com checklist do edital e comandos de teste de conectividade e segurança no Packet Tracer. | [`GUIA-DE-AVALIACAO-PROFESSOR.md`](GUIA-DE-AVALIACAO-PROFESSOR.md) |
+| 📦 **Pacote Compactado de Entrega** | Arquivo compactado contendo todos os entregáveis finais para download direto. | [`ENTREGA-PROJETO-TERMINAL-PORTUARIO-UNDB.zip`](ENTREGA-PROJETO-TERMINAL-PORTUARIO-UNDB.zip) |
 
 ---
 
@@ -41,8 +40,8 @@ Todos os produtos exigidos no edital estão consolidados e prontos para consulta
 | :--- | :--- | :--- |
 | **1. Metodologia Aplicada** | Abordagem Top-Down estruturada em 4 etapas (Levantamento de Requisitos ➔ Análise de Riscos ➔ Topologias Física/Lógica ➔ Orçamento e Simulação). | Slides 1 e 4 da Apresentação + Relatórios Setoriais |
 | **2. Requisitos e Riscos / Business Case** | Business Case com justificativa econômica: calado natural de 23m, safra MATOPI (3,7 mi ton/mês) e prevenção de multas marítimas de *demurrage* (US$ 50k a 80k/dia). Matriz de riscos ambientais (maresia, EMI, atmosfera explosiva e poeira). | Slides 2 e 3 da Apresentação |
-| **3. Orçamento por Ordem de Grandeza (BOM)** | Orçamento consolidado com pesquisa de mercado de setembro de 2026, marcas homologadas (Cisco, Furukawa, Dell, APC), subtotal de R$ 904.034,14 + Reserva Técnica de 20% (R$ 180.806,83) = **R$ 1.084.840,97**. | Slide 3 da Apresentação + Tópico 3 da Auditoria |
-| **4. As-Built / Infraestrutura de Cabeamento** | Metragens de cabos Cat6 100% cobre (~4.800m totais), backbone de fibra óptica monomodo OS2 (~2.220m), identificação de pontos norma ANSI/TIA-606 e armários IP66/IP67. | Slide 4 da Apresentação + Relatórios das Duplas |
+| **3. Orçamento por Ordem de Grandeza (BOM)** | Orçamento consolidado com pesquisa de mercado de setembro de 2026, marcas homologadas (Cisco, Furukawa, Dell, APC), subtotal de R$ 904.034,14 + Reserva Técnica de 20% (R$ 180.806,83) = **R$ 1.084.840,97**. | Slide 3 da Apresentação |
+| **4. As-Built / Infraestrutura de Cabeamento** | Metragens de cabos Cat6 100% cobre (~4.800m totais), backbone de fibra óptica monomodo OS2 (~2.220m), identificação de pontos norma ANSI/TIA-606 e armários IP66/IP67. | Slide 4 da Apresentação + Pastas Setoriais |
 | **5. Topologia Física dos Ativos** | Diagrama vetorial em estrela centralizado no CPD do Prédio Administrativo + plantas e topologias físicas individualizadas de cada dupla. | Slides 4 a 9 da Apresentação |
 | **6. Topologia Lógica dos Ativos** | Superbloco `10.100.0.0/16`, 8 VLANs segmentadas, Trunks 802.1Q, priorização QoS para Voz e Telemetria, DHCP pools e ACLs de segurança Zero Trust. | Slide 10 da Apresentação + `Terminal-Portuario-Geral.pkt` |
 
@@ -50,7 +49,7 @@ Todos os produtos exigidos no edital estão consolidados e prontos para consulta
 
 ## 🌐 Arquitetura Lógica & Endereçamento IP Consolidado
 
-O projeto unificou o plano de endereçamento, sanando os conflitos originais em que múltiplas duplas haviam adotado a mesma rede `192.168.1.0/24`:
+O projeto unificou o plano de endereçamento, sanando os conflitos originais e estabelecendo um superbloco estanque:
 
 | VLAN ID | Nome do Segmento | Sub-rede IPv4 | Gateway (SVI) | Dispositivos Atendidos | Políticas / QoS |
 | :---: | :--- | :--- | :--- | :--- | :--- |
@@ -82,14 +81,13 @@ O projeto unificou o plano de endereçamento, sanando os conflitos originais em 
 
 ## 🧪 Como Executar a Simulação no Cisco Packet Tracer
 
-1. Certifique-se de possuir o **Cisco Packet Tracer 8.2+** instalado.
-2. Abra o arquivo mestre: [`Terminal-Portuario-Geral.pkt`](Terminal-Portuario-Geral.pkt).
-3. Aguarde o ciclo de convergência do protocolo Spanning Tree (STP) (LEDs verdes em todos os links).
-4. **Testes de Validação Recomendados:**
+1. Abra o arquivo mestre: [`Terminal-Portuario-Geral.pkt`](Terminal-Portuario-Geral.pkt).
+2. Aguarde a convergência do Spanning Tree (STP).
+3. **Testes de Validação:**
    - No PC da Diretoria (`10.100.10.x`), execute `ping 10.100.10.1` (Gateway local).
    - Teste a comunicação inter-setorial com a Portaria: `ping 10.100.40.10` (Catraca da Portaria).
    - Teste a telemetria com a Pera Ferroviária: `ping 10.100.72.10` (Balança Ferroviária).
-   - Verifique o isolamento de segurança: computadores na VLAN 60 (Visitantes) não conseguem pingar nenhum dispositivo das VLANs 10, 30, 40, 70 ou 99.
+   - Verifique o isolamento de segurança: computadores na VLAN 60 (Visitantes) não conseguem acessar as redes corporativas.
 
 ---
 
@@ -98,12 +96,10 @@ O projeto unificou o plano de endereçamento, sanando os conflitos originais em 
 ```text
 INFRARedes-UNDB/
 │
-├── README.md                                           # Este documento executivo
+├── README.md                                           # Apresentação executiva do repositório
 ├── GUIA-DE-AVALIACAO-PROFESSOR.md                     # Guia passo a passo de homologação e notas técnicas
 ├── Projeto-de-Infraestrutura-de-Redes-Apresentacao.pdf # APRESENTAÇÃO OFICIAL EM PDF (11 Slides 16:9)
 ├── Terminal-Portuario-Geral.pkt                        # LABORATÓRIO MASTER UNIFICADO (Packet Tracer)
-├── Auditoria-Geral-InfraRedes-UNDB.html               # Relatório de Auditoria Técnica e Saneamento
-├── Apresentacao-Terminal-Portuario-UNDB.html          # Apresentação Interativa em HTML
 ├── ENTREGA-PROJETO-TERMINAL-PORTUARIO-UNDB.zip        # PACOTE COMPACTADO PARA DOWNLOAD
 │
 ├── Predio-Administrativo(Gabriel Ordonez e Higor Gabriel)/
@@ -124,14 +120,9 @@ INFRARedes-UNDB/
 │   ├── Relatório Geral - Pera Ferroviária.docx        # Fonte do relatório
 │   └── Simulação Packet Tracer/                       # Simulação do setor
 │
-├── Predio-Inspetoria(Mateus Dantas e Renan Pires)/
-│   ├── relatorioinspetoriaberco098.pdf                # Relatório técnico e planta
-│   └── Simulação Packet Tracer/                       # Simulação do setor
-│
-└── auditoria-tools/                                   # Scripts Python e geradores de compilação
-    ├── build_presentation_pdf_resumo.py               # Gerador automatizado do PDF executivo
-    ├── apresentacao_resumo_source.html                # Template estruturado dos slides
-    └── imagens_duplas/                                # Diagramas e plantas extraídos de cada setor
+└── Predio-Inspetoria(Mateus Dantas e Renan Pires)/
+    ├── relatorioinspetoriaberco098.pdf                # Relatório técnico e planta
+    └── Simulação Packet Tracer/                       # Simulação do setor
 ```
 
 ---
