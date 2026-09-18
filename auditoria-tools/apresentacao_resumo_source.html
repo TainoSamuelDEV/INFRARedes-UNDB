@@ -91,22 +91,11 @@
     flex: 1;
     min-height: 0;
   }
-  .grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12pt;
-    flex: 1;
-  }
   .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10pt;
     flex: 1;
-  }
-  .grid-5 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8pt;
   }
 
   /* Cards */
@@ -153,7 +142,7 @@
     border-radius: 4pt;
   }
 
-  /* Concise Bullet points */
+  /* Bullet points */
   .bullet-list {
     list-style: none;
     font-size: 8pt;
@@ -174,7 +163,7 @@
     font-size: 9pt;
   }
 
-  /* Badges & Tables */
+  /* Pills & Tables */
   .pill {
     display: inline-block;
     padding: 2pt 5pt;
@@ -255,14 +244,14 @@
     <div class="card" style="background: #f1f5f9; padding: 14pt 16pt;">
       <div style="font-size: 14pt; font-weight: 800; color: #0f172a; margin-bottom: 3pt;">5 Áreas Integradas</div>
       <div style="font-size: 8.5pt; color: #475569;">
-        Administrativo, Portaria, Silo de Grãos, Pera Ferroviária e Berço 098/CCO.
+        Backbone em estrela ancorado no CPD do Prédio Administrativo.
       </div>
     </div>
     
     <div class="card" style="background: #f1f5f9; padding: 14pt 16pt;">
       <div style="font-size: 14pt; font-weight: 800; color: #0f172a; margin-bottom: 3pt;">Topologias Reais</div>
       <div style="font-size: 8.5pt; color: #475569;">
-        Plantas executivas e esquemas de rede desenvolvidos por cada dupla.
+        Plantas e esquemas de rede desenvolvidos pelas duplas de engenharia.
       </div>
     </div>
 
@@ -281,13 +270,13 @@
 </div>
 
 <!-- ==========================================
-     SLIDE 2: VISÃO GERAL & CONTEXTO PORTUÁRIO
+     SLIDE 2: CONTEXTO ESTRATÉGICO
      ========================================== -->
 <div class="slide">
   <div class="badge badge-blue">CONTEXTO ESTRATÉGICO</div>
   <div class="slide-title">Contexto Portuário & Missão Crítica</div>
   <div class="slide-subtitle">
-    O Terminal do Itaqui é o maior canal de escoamento de grãos do Arco Norte. A rede de telecomunicações atua com 99,999% de disponibilidade para evitar paradas que geram severas penalidades financeiras.
+    O complexo do Itaqui escoa a safra de grãos do Arco Norte. A rede de dados é a espinha dorsal de sistemas operacionais de missão zero downtime (99,999%).
   </div>
 
   <div class="grid-4" style="margin-bottom: 10pt;">
@@ -296,8 +285,8 @@
         <span>🌊</span> Calado de 23m
       </div>
       <ul class="bullet-list">
-        <li>Profundidade natural para gigantes <strong>Panamax</strong> e <strong>Capesize</strong>.</li>
-        <li>Marés de até 7m exigem sincronia contínua de atracação.</li>
+        <li>Atracação de graneleiros <strong>Panamax</strong> e <strong>Capesize</strong>.</li>
+        <li>Marés de até 7m exigem monitoramento contínuo no píer.</li>
       </ul>
     </div>
 
@@ -306,8 +295,8 @@
         <span>🌾</span> Safra MATOPI
       </div>
       <ul class="bullet-list">
-        <li><strong>3,7 milhões de ton/mês</strong> de soja e milho escoados.</li>
-        <li>Convergência rodoferroviária ininterrupta no cais.</li>
+        <li><strong>3,7 milhões de ton/mês</strong> de grãos escoados.</li>
+        <li>Integração rodoferroviária contínua 24/7/365.</li>
       </ul>
     </div>
 
@@ -317,17 +306,17 @@
       </div>
       <ul class="bullet-list">
         <li>Multa de <strong>US$ 50k a 80k/dia</strong> por navio retido.</li>
-        <li>Falhas de rede paralisam faturamento e balanças.</li>
+        <li>Falhas de rede paralisam balanças, OCR e despacho.</li>
       </ul>
     </div>
 
     <div class="card">
       <div class="card-header" style="color: #7e22ce;">
-        <span>🛡️</span> Ambiente Hostil
+        <span>🏢</span> Núcleo Central (CPD)
       </div>
       <ul class="bullet-list">
-        <li>Maresia extrema, umidade salina e pó de grãos (Zona Ex).</li>
-        <li>Equipamentos em armários <strong>IP66/IP67</strong> de inox.</li>
+        <li>CPD principal instalado no <strong>Prédio Administrativo</strong>.</li>
+        <li>Servidores de ERP, Storage SAN e Gateway central.</li>
       </ul>
     </div>
   </div>
@@ -335,7 +324,7 @@
   <div class="card" style="background: #f8fafc; padding: 8pt 14pt;">
     <div style="font-size: 8pt; font-weight: 700; color: #0f172a; margin-bottom: 2pt;">Espinha Dorsal da Solução:</div>
     <div style="font-size: 7.5pt; color: #475569;">
-      Backbone em Fibra Monomodo OS2 • Switches PoE+ com redundância • 8 VLANs isoladas • Cabeamento Cat6 100% Cobre • Nobreaks UPS senoidais em todos os racks remotos.
+      Backbone em estrela com Fibra Monomodo OS2 saindo do CPD do Administrativo • Switches PoE+ com redundância • 8 VLANs isoladas com ACLs • Cabeamento Cat6 100% Cobre • Nobreaks senoidais em todos os racks remotos.
     </div>
   </div>
 
@@ -352,7 +341,7 @@
   <div class="badge">ORÇAMENTO GERAL</div>
   <div class="slide-title">Orçamento por Ordem de Grandeza</div>
   <div class="slide-subtitle">
-    Consolidação de investimentos em ativos e infraestrutura de rede das 5 áreas operacionais (pesquisa de mercado de setembro de 2026).
+    Consolidação financeira das 5 áreas operacionais (pesquisa de mercado de setembro de 2026). O Prédio Administrativo concentra 78,4% dos investimentos devido ao CPD central e servidores.
   </div>
 
   <div class="grid-2">
@@ -362,7 +351,7 @@
       
       <div>
         <div style="display: flex; justify-content: space-between; font-size: 8pt; font-weight: 600; margin-bottom: 2pt;">
-          <span>Prédio Administrativo</span>
+          <span>Prédio Administrativo (CPD Central)</span>
           <span>R$ 708.624,00 (78,4%)</span>
         </div>
         <div style="background: #e2e8f0; height: 16pt; border-radius: 4pt; overflow: hidden;">
@@ -420,7 +409,7 @@
             <tr><th>Área / Setor</th><th style="text-align: right;">Valor Direto</th></tr>
           </thead>
           <tbody>
-            <tr><td>Prédio Administrativo TP</td><td style="text-align: right; font-family: 'JetBrains Mono'; font-weight: 600;">R$ 708.624,00</td></tr>
+            <tr><td>Prédio Administrativo (CPD Central)</td><td style="text-align: right; font-family: 'JetBrains Mono'; font-weight: 600;">R$ 708.624,00</td></tr>
             <tr><td>Pera Ferroviária</td><td style="text-align: right; font-family: 'JetBrains Mono'; font-weight: 600;">R$ 125.144,00</td></tr>
             <tr><td>Portaria TP</td><td style="text-align: right; font-family: 'JetBrains Mono'; font-weight: 600;">R$ 32.981,83</td></tr>
             <tr><td>Berço 098 / CCO</td><td style="text-align: right; font-family: 'JetBrains Mono'; font-weight: 600;">R$ 18.891,32</td></tr>
@@ -447,25 +436,27 @@
 </div>
 
 <!-- ==========================================
-     SLIDE 4: TOPOLOGIA GERAL DE CAMPUS
+     SLIDE 4: TOPOLOGIA GERAL DE CAMPUS (CENTRALIZADA NO ADM)
      ========================================== -->
 <div class="slide">
   <div class="badge">BACKBONE ÓPTICO</div>
-  <div class="slide-title">Topologia Física Geral de Campus</div>
+  <div class="slide-title">Topologia Física Geral de Campus (Estrela)</div>
   <div class="slide-subtitle">
-    Arquitetura em estrela centralizada no CCO. Todos os setores conectam-se via fibra monomodo OS2 subterrânea imune a ruídos eletromagnéticos industriais.
+    Arquitetura em estrela centralizada no CPD do Prédio Administrativo (MDF Central). Enlaces ponto-a-ponto de fibra monomodo OS2 conectam todas as áreas operacionais com imunidade eletromagnética.
   </div>
 
   <div class="grid-2">
-    <!-- SVG Vector Topology -->
+    <!-- SVG Vector Topology - ADM NO CENTRO -->
     <div class="card" style="padding: 6pt; background: #ffffff;">
       <div style="height: 195pt; display: flex; align-items: center; justify-content: center;">
         <svg viewBox="0 0 460 250" style="width: 100%; height: 100%;">
+          <!-- Enlaces de fibra pontilhada azul convergindo ao ADM -->
           <line x1="230" y1="125" x2="65" y2="45" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
           <line x1="230" y1="125" x2="395" y2="45" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
           <line x1="230" y1="125" x2="65" y2="205" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
           <line x1="230" y1="125" x2="395" y2="205" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,3" />
 
+          <!-- Distâncias -->
           <rect x="110" y="65" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
           <text x="140" y="76" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 450m</text>
 
@@ -478,25 +469,31 @@
           <rect x="290" y="165" width="60" height="15" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
           <text x="320" y="176" font-size="7.5" fill="#0369a1" font-weight="bold" text-anchor="middle">SMF 320m</text>
 
-          <rect x="165" y="98" width="130" height="54" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2" />
-          <text x="230" y="121" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">BERÇO 098 / CCO</text>
-          <text x="230" y="136" font-size="7.5" fill="#38bdf8" text-anchor="middle">Core L3 & Gateway Central</text>
+          <!-- NÓ CENTRAL: PRÉDIO ADMINISTRATIVO (CPD CENTRAL) -->
+          <rect x="155" y="96" width="150" height="58" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2" />
+          <text x="230" y="117" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">PRÉDIO ADMINISTRATIVO</text>
+          <text x="230" y="131" font-size="8" fill="#38bdf8" font-weight="bold" text-anchor="middle">CPD Central / Datacenter</text>
+          <text x="230" y="144" font-size="6.5" fill="#94a3b8" text-anchor="middle">Servidores • Storage • Gateway</text>
 
+          <!-- Node: Portaria TP -->
           <rect x="10" y="22" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
           <text x="65" y="42" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PORTARIA TP</text>
-          <text x="65" y="56" font-size="7" fill="#64748b" text-anchor="middle">Switch 16p • LPR / Acesso</text>
+          <text x="65" y="56" font-size="7" fill="#64748b" text-anchor="middle">Switch 16p • LPR / Catracas</text>
 
+          <!-- Node: Silo de Grãos -->
           <rect x="340" y="22" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
           <text x="395" y="42" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">SILO DE GRÃOS</text>
           <text x="395" y="56" font-size="7" fill="#64748b" text-anchor="middle">Switch 24p • Sensores IoT</text>
 
+          <!-- Node: Pera Ferroviária -->
           <rect x="10" y="182" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
           <text x="65" y="202" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PERA FERROVIÁRIA</text>
           <text x="65" y="216" font-size="7" fill="#64748b" text-anchor="middle">2x Switch IP67 • Balanças</text>
 
+          <!-- Node: Berço 098 / CCO -->
           <rect x="340" y="182" width="110" height="46" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
-          <text x="395" y="202" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">PRÉDIO ADMIN.</text>
-          <text x="395" y="216" font-size="7" fill="#64748b" text-anchor="middle">3x Switch 48p • 108 Pontos</text>
+          <text x="395" y="202" font-size="8.5" fill="#0f172a" font-weight="bold" text-anchor="middle">BERÇO 098 / CCO</text>
+          <text x="395" y="216" font-size="7" fill="#64748b" text-anchor="middle">NVR • Câmeras Cais • Telões</text>
         </svg>
       </div>
     </div>
@@ -504,16 +501,16 @@
     <!-- Destaques Técnicos -->
     <div style="display: flex; flex-direction: column; gap: 8pt;">
       <div class="card">
-        <div class="card-header" style="font-size: 9pt;">Pilares de Conectividade do Campus</div>
+        <div class="card-header" style="font-size: 9pt;">Por que o Prédio Administrativo é o Centro?</div>
         <ul class="bullet-list" style="margin-top: 2pt;">
-          <li><strong>Enlaces Monomodo OS2:</strong> 10 Gbps pronto, sem limite prático de distância.</li>
-          <li><strong>Tolerância a Falhas:</strong> Topologia estelar sem loops de camada 2.</li>
-          <li><strong>Dutos Subterrâneos PEAD:</strong> Blindagem física contra máquinas pesadas e calor.</li>
+          <li><strong>Sala de CPD Dedicada:</strong> Rack fechado de 42U com controle de climatização e nobreak de 3 kVA.</li>
+          <li><strong>Concentração de Serviços:</strong> Servidores de Banco de Dados, ERP portuário, Storage SAN/NAS e saída Internet.</li>
+          <li><strong>Tolerância e Isolamento:</strong> Distante da agressividade direta de maresia do cais (Berço 098).</li>
         </ul>
       </div>
 
       <div class="card" style="flex: 1;">
-        <div class="card-header" style="font-size: 9pt;">Volume Total de Ativos Conectados</div>
+        <div class="card-header" style="font-size: 9pt;">Volume de Ativos no Campus</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6pt; margin-top: 3pt;">
           <div class="card-white" style="text-align: center;">
             <div style="font-size: 16pt; font-weight: 800; color: #0284c7;">104</div>
@@ -539,9 +536,9 @@
      ========================================== -->
 <div class="slide">
   <div class="badge badge-purple">SETOR 1 • GABRIEL ORDONEZ & HIGOR GABRIEL</div>
-  <div class="slide-title">Prédio Administrativo: Topologia & Ativos</div>
+  <div class="slide-title">Prédio Administrativo: CPD Central & Topologia</div>
   <div class="slide-subtitle">
-    Hub central corporativo com 108 pontos Cat6, servidores de aplicação portuária e rede sem fio corporativa Wi-Fi 6.
+    Núcleo central de processamento e telecomunicações com 108 pontos Cat6, 3 servidores, storage SAN e Wi-Fi 6.
   </div>
 
   <div class="grid-sector">
@@ -553,13 +550,13 @@
     <!-- Dados Sintéticos -->
     <div style="display: flex; flex-direction: column; gap: 8pt;">
       <div class="card">
-        <div class="card-header" style="color: #7e22ce;">🏢 Ativos de Campo</div>
+        <div class="card-header" style="color: #7e22ce;">🏢 Ativos do CPD Central</div>
         <ul class="bullet-list">
           <li><strong>Switches:</strong> 3× Cisco Catalyst 2960-48P PoE+ (144 portas).</li>
+          <li><strong>Core/Gateway:</strong> Agregador 10 Gb/s + Gateway ER8411.</li>
           <li><strong>Servidores:</strong> 3x PowerEdge (AD/DNS, ERP, Backup).</li>
-          <li><strong>Storage:</strong> 1 SAN/NAS dedicado (rede isolada 10 Gb/s).</li>
-          <li><strong>Wi-Fi:</strong> 4 Access Points Wi-Fi 6 corporativos.</li>
-          <li><strong>Pontos:</strong> 108 pontos Cat6 nos 2 pavimentos.</li>
+          <li><strong>Storage:</strong> 1 SAN/NAS em rede isolada 10 Gb/s.</li>
+          <li><strong>Wi-Fi & Pontos:</strong> 4 APs Wi-Fi 6 e 108 tomadas Cat6.</li>
         </ul>
       </div>
 
@@ -604,7 +601,7 @@
         <div class="card-header" style="color: #0284c7;">🚧 Ativos de Campo</div>
         <ul class="bullet-list">
           <li><strong>Switch:</strong> 1× Cisco Catalyst 2960-16P PoE+ em rack 12U.</li>
-          <li><strong>Uplink:</strong> Par de fibra OS2 direto ao CCO (450 metros).</li>
+          <li><strong>Uplink:</strong> Par de fibra OS2 direto ao CPD Central (450m).</li>
           <li><strong>Câmeras:</strong> 4 Câmeras IP Full HD LPR (Placas de carretas).</li>
           <li><strong>Acesso:</strong> 1 Catraca eletrônica biométrica/RFID IP.</li>
           <li><strong>Wi-Fi:</strong> 1 AP externo para motoristas e visitantes.</li>
@@ -652,7 +649,7 @@
         <div class="card-header" style="color: #b45309;">🌾 Ativos Industriais</div>
         <ul class="bullet-list">
           <li><strong>Switch:</strong> 1× Industrial Ruggedized 24p PoE+ (NEMA 4X / IP67).</li>
-          <li><strong>Uplink:</strong> 850m de fibra OS2 subterrânea até o CCO.</li>
+          <li><strong>Uplink:</strong> 850m de fibra OS2 subterrânea até o CPD Central.</li>
           <li><strong>Câmeras:</strong> 5 Câmeras antideflagrantes nos silos.</li>
           <li><strong>Sensores:</strong> Termometria de massa e gás (CO/Fosfina).</li>
           <li><strong>Cabos:</strong> Cat6 STP blindado com aterramento industrial.</li>
@@ -700,10 +697,10 @@
         <div class="card-header" style="color: #15803d;">🚂 Ativos de Via</div>
         <ul class="bullet-list">
           <li><strong>Switches:</strong> 2× Industriais Cisco IE-3000/4000 PoE+ IP67.</li>
-          <li><strong>Uplink:</strong> Fibra OS2 600m imune a ruídos EMI de locomotivas.</li>
+          <li><strong>Uplink:</strong> Fibra OS2 600m direto ao CPD Central do ADM.</li>
           <li><strong>OCR:</strong> 10 Câmeras especiais para identificação de vagões.</li>
           <li><strong>Balanças:</strong> 2 Balanças dinâmicas de pesagem de eixos.</li>
-          <li><strong>Gabinete:</strong> Armários de inox 316 com coxins antivibração.</li>
+          <li><strong>Gabinete:</strong> Armários de inox 316 com amortecedores.</li>
         </ul>
       </div>
 
@@ -733,9 +730,9 @@
      ========================================== -->
 <div class="slide">
   <div class="badge">SETOR 5 • MATEUS DANTAS & RENAN PIRES</div>
-  <div class="slide-title">Berço 098 / CCO: Núcleo L3 & Centro de Controle</div>
+  <div class="slide-title">Berço 098 / CCO: Sala de Operações & Cais</div>
   <div class="slide-subtitle">
-    Centro nevrálgico do complexo portuário e comando de cais. Concentra o Core L3, terminação de fibras e gravação NVR.
+    Centro de comando de atracação marítima e monitoramento náutico. Conectado por fibra óptica direta ao CPD Central.
   </div>
 
   <div class="grid-sector">
@@ -747,23 +744,22 @@
     <!-- Dados Sintéticos -->
     <div style="display: flex; flex-direction: column; gap: 8pt;">
       <div class="card">
-        <div class="card-header" style="color: #0f172a;">⚓ Núcleo de Rede</div>
+        <div class="card-header" style="color: #0f172a;">⚓ Sala de Operações & Cais</div>
         <ul class="bullet-list">
-          <li><strong>Core L3:</strong> 1× Cisco Catalyst 3650 (Roteamento entre VLANs).</li>
-          <li><strong>Borda:</strong> 1× Cisco ISR 4331 com redundância WAN e Firewall.</li>
-          <li><strong>NVR:</strong> Central 32 Canais (64 TB RAID 5 - Gravação contínua).</li>
+          <li><strong>Uplink:</strong> Fibra OS2 320m conectada direto ao CPD do ADM.</li>
+          <li><strong>Switches:</strong> Switch 24p PoE+ para consoles de despacho.</li>
+          <li><strong>NVR Central:</strong> 32 Canais (64 TB RAID 5 - Gravação contínua).</li>
           <li><strong>Cais:</strong> 4 Câmeras PTZ 40x monitorando atracação de navios.</li>
-          <li><strong>VoIP:</strong> 5 Telefones IP para coordenação rádio e terra.</li>
+          <li><strong>VoIP:</strong> 5 Telefones IP para coordenação marítima.</li>
         </ul>
       </div>
 
       <div class="card" style="flex: 1;">
-        <div class="card-header" style="color: #0284c7;">🧠 Funções Centrais</div>
+        <div class="card-header" style="color: #0284c7;">🧠 Integração Operacional</div>
         <ul class="bullet-list">
-          <li><strong>Gateways SVIs:</strong> Terminação de todas as 8 VLANs do campus.</li>
-          <li><strong>DHCP Server:</strong> Pools dedicados por escopo setorial.</li>
-          <li><strong>Trunks 802.1Q:</strong> Enlaces ópticos para os 4 setores remotos.</li>
-          <li><strong>QoS:</strong> Voz (VLAN 20) e Automação (VLAN 70) priorizados.</li>
+          <li><strong>Telões do CCO:</strong> Supervisão em tempo real de silos, trens e cais.</li>
+          <li><strong>CFTV Centralizado:</strong> Recepção dos fluxos RTSP de todas as 28 câmeras.</li>
+          <li><strong>QoS:</strong> Voz e despacho náutico com prioridade absoluta.</li>
         </ul>
       </div>
     </div>
@@ -819,7 +815,7 @@
         <div class="card-header" style="color: #15803d;">Conformidade Técnica</div>
         <div style="font-size: 7.5pt; color: #166534; line-height: 1.4;">
           ✓ Conflitos originais de IP <code>192.168.1.0/24</code> foram 100% saneados.<br>
-          ✓ Falhas de DHCP/APIPA eliminadas com pools centralizados no Core L3.<br>
+          ✓ Falhas de DHCP/APIPA eliminadas com pools centralizados no Core do CPD.<br>
           ✓ 100% interoperável no laboratório consolidado <code>Terminal-Portuario-Geral.pkt</code>.
         </div>
       </div>
@@ -848,7 +844,7 @@
       <div class="grid-2" style="gap: 6pt;">
         <div class="card" style="padding: 8pt 10pt;">
           <div style="font-size: 8.5pt; font-weight: 700; color: #0284c7;">Conectividade</div>
-          <div style="font-size: 7pt; color: #475569; margin-top: 1pt;">Backbone em fibra óptica OS2 unindo os 5 setores ao CCO.</div>
+          <div style="font-size: 7pt; color: #475569; margin-top: 1pt;">Backbone em estrela com fibra OS2 ancorado no CPD do Administrativo.</div>
         </div>
         <div class="card" style="padding: 8pt 10pt;">
           <div style="font-size: 8.5pt; font-weight: 700; color: #15803d;">Segurança</div>
